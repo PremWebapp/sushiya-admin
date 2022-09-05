@@ -1,38 +1,74 @@
-.App {
-  text-align: center;
+.colorblack {
+  color: black !important;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.bold {
+  font-weight: bolder;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.bgk {
+  background-color: #f3f3f3 !important;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+label {
+  color: black;
 }
 
-.App-link {
-  color: #61dafb;
+.demoImage {
+  max-width: 120px !important;
+  max-height: 100px !important;
+  margin: 5px 20px 0px 0px !important;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+.ant-tabs-tab-active {
+  background-color: orange !important;
+}
+
+.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: white !important;
+}
+
+.ant-tabs-tab .ant-tabs-tab-btn:hover {
+  color: orange !important;
+}
+
+.ant-tabs-tab-active .ant-tabs-tab-btn:hover {
+  color: white !important;
+}
+
+/* // for overflow icon */
+/* width */
+::-webkit-scrollbar {
+  width:2px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+.button_default {
+  padding         : 0px 60px;
+  border-radius   : 20px;
+  box-shadow      : 2px 5px 14px 0px rgb(0 0 0 / 26%);
+  padding         : 7px 50px;
+  border          : none;
+  background-color: #fc6011;
+  color           : #fff;
+}
+
+.button_default:hover {
+  transform: translateY(2px);
 }
