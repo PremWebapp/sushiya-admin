@@ -218,10 +218,10 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 
-import { AiOutlineMenuUnfold, AiOutlineStock } from "react-icons/ai";
+import { AiOutlineMenuUnfold, AiOutlineStock, AiFillApi, AiFillFormatPainter, AiFillFire,AiOutlineStar,AiFillSnippets ,AiOutlineSplitCells,AiOutlinePartition,AiOutlineSetting } from "react-icons/ai";
 import { MdLocalOffer } from "react-icons/md";
 import { IoIosPeople } from "react-icons/io";
-import { BsSpeedometer, BsPersonCircle } from "react-icons/bs";
+import { BsSpeedometer, BsPersonCircle ,BsCashCoin} from "react-icons/bs";
 import { GrUserSettings } from "react-icons/gr";
 import { GiReceiveMoney } from "react-icons/gi";
 import { RiAdminFill } from "react-icons/ri";
@@ -234,22 +234,15 @@ function SideNav() {
   return (
     <>
       <Sider
-        width={300}
+      className="sidebar-sidenav"
         theme="light"
-        style={{
-          overflow: "auto",
-          height: "100vh",
-        //   position: "fixed",
-        }}
       >
         <div className="logo text-center mb-5">
-          <Link to="#" className="navbar-brand text-center">
+          <Link to="/admin" className="navbar-brand text-center">
             <img
               src={SushiyaLogo}
               alt=""
-              width="100"
-              height="84"
-              className="d-inline-block align-text-top"
+              className="d-inline-block align-text-top sidenav-img"
             />
           </Link>
         </div>
@@ -307,70 +300,70 @@ function SideNav() {
           <Menu.Item
             className={styles.paddingLeft}
             key="8"
-            icon={<BsPersonCircle size={20} />}
+            icon={<BsCashCoin size={20} />}
           >
             <NavLink to="/admin/payment">Payment Management  </NavLink>
           </Menu.Item>
           <Menu.Item
             className={styles.paddingLeft}
             key="9"
-            icon={<RiAdminFill size={20} />}
+            icon={<AiFillApi size={20} />}
           >
             <NavLink to="/admin/subadmin"> Commission Management</NavLink>
           </Menu.Item>
           <Menu.Item
             className={styles.paddingLeft}
             key="10"
-            icon={<BsPersonCircle size={20} />}
+            icon={<AiFillFormatPainter size={20} />}
           >
             <NavLink to="/admin/promo">Promo Code Management</NavLink>
           </Menu.Item>
           <Menu.Item
             className={styles.paddingLeft}
             key="11"
-            icon={<BsPersonCircle size={20} />}
+            icon={<AiFillFire size={20} />}
           >
             <NavLink to="/admin/dish">Dish Management</NavLink>
           </Menu.Item>
           <Menu.Item
             className={styles.paddingLeft}
-            key="11"
-            icon={<BsPersonCircle size={20} />}
+            key="12"
+            icon={<AiOutlineStar size={20} />}
           >
             <NavLink to="/admin/bankdetail">Rating & Review</NavLink>
           </Menu.Item>
           <Menu.Item
             className={styles.paddingLeft}
-            key="11"
-            icon={<BsPersonCircle size={20} />}
+            key="13"
+            icon={<AiFillSnippets size={20} />}
           >
             <NavLink to="/admin/bankdetail">Report Management</NavLink>
           </Menu.Item>
           <Menu.Item
             className={styles.paddingLeft}
-            key="11"
-            icon={<BsPersonCircle size={20} />}
+            key="14"
+            icon={<AiOutlineSplitCells size={20} />}
           >
             <NavLink to="/admin/bankdetail">Fares Management</NavLink>
           </Menu.Item>
           <Menu.Item
             className={styles.paddingLeft}
-            key="11"
-            icon={<BsPersonCircle size={20} />}
+            key="15"
+            icon={<AiOutlinePartition size={20} />}
           >
             <NavLink to="/admin/bankdetail">Subscription Management</NavLink>
           </Menu.Item>
           <Menu.Item
             className={styles.paddingLeft}
-            key="11"
+            key="16"
             icon={<BsPersonCircle size={20} />}
           >
             <NavLink to="/admin/bankdetail">Sub Admin</NavLink>
           </Menu.Item>
           <Menu.Item
             className={styles.paddingLeft}
-            key="11"
-            icon={<BsPersonCircle size={20} />}
+            key="17"
+            icon={<AiOutlineSetting size={20} />}
           >
             <NavLink to="/admin/bankdetail">Setting</NavLink>
           </Menu.Item>

@@ -1,7 +1,5 @@
 import React from 'react'
-import { PathUrl, Token, UserId } from '../../../config/Config'
 import { NavLink, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import profileImg from "../../../img/undraw_profile.jpg"
 import { useDispatch,useSelector } from 'react-redux';
@@ -45,7 +43,7 @@ function TopBar() {
                 <form
                     className="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                     <div className="input-group">
-                        <input type="text" className="form-control border-0 small" placeholder="Search for..."
+                        <input type="text" className="form-control border small" placeholder="Search for..."
                             aria-label="Search" aria-describedby="basic-addon2" />
                         <div className="input-group-append">
                             <button className="btn btn-primary" type="button">
@@ -212,7 +210,7 @@ function TopBar() {
                         {/* <!-- Dropdown - User Information --> */}
                         <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                             aria-labelledby="userDropdown">
-                            <NavLink className="dropdown-item" to="/Admin/Profile">
+                            <NavLink className="dropdown-item" to="/admin/profile">
                                 <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Profile
                             </NavLink>

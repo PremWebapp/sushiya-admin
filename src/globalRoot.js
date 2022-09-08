@@ -31,18 +31,18 @@ function GlobalRoot() {
                 <Route exact path="/countryCity" element={<CountryCityManagement />} />
                 <Route exact path="/restroDetail/:id" element={<RestroDetailManagement />} />
                 <Route exact path="/driverDetail/:id" element={<DriverDetailManagement />} />
-                <Route exact path="/Profile" element={<ProfileManagement />} />
-                <Route exact path="/Promo/Code" element={<PromoCodePage />} />
-                <Route exact path="/Promo/Promotion" element={<PromotionPage />} />
-                <Route exact path="/Category" element={<CategoryManagement />} />
-                <Route exact path="/User" element={<UserManagement />} />
-                <Route exact path="/Restaurant" element={<RestaurantManagement />} />
+                <Route exact path="/profile" element={<ProfileManagement />} />
+                <Route exact path="/promo/code" element={<PromoCodePage />} />
+                <Route exact path="/promo/promotion" element={<PromotionPage />} />
+                <Route exact path="/category" element={<CategoryManagement />} />
+                <Route exact path="/user" element={<UserManagement />} />
+                <Route exact path="/restaurant" element={<RestaurantManagement />} />
                 <Route exact path="/userMap" element={<UserMap />} />
-                <Route exact path="/Driver" element={<DriverManagement />} />
-                <Route exact path="/Dish" element={<DishManagement />} />
-                <Route exact path="/Promo" element={<PromoManagement />} />
-                <Route exact path="/Order" element={<OrderManagement />} />
-                <Route exact path="/Payment" element={<PaymentManagement />} />
+                <Route exact path="/driver" element={<DriverManagement />} />
+                <Route exact path="/dish" element={<DishManagement />} />
+                <Route exact path="/promo" element={<PromoManagement />} />
+                <Route exact path="/order" element={<OrderManagement />} />
+                <Route exact path="/payment" element={<PaymentManagement />} />
             </Routes>
         </div >
     );

@@ -12,7 +12,7 @@ function UserPage() {
 
     // Token and Url
     const token = Token().token;
-    const url = PathUrl().urlData.production;
+    const url = PathUrl().urlData?.production;
 
     const [restaurantMap, setRestaurantMap] = useState(true);
     const [restaurantList, setRestaurantList] = useState(false);
@@ -46,7 +46,7 @@ function UserPage() {
             dataIndex: 'id',
             key: 'id',
             sorter: {
-                compare: (a, b) => a.id - b.id,
+                compare: (a, b) => a?.id - b?.id,
                 multiple: 3,
             }
         },
@@ -55,11 +55,11 @@ function UserPage() {
             dataIndex: 'name',
             key: 'name',
             sorter: {
-                compare: (a, b) => a.name - b.name,
+                compare: (a, b) => a?.name - b?.name,
                 multiple: 3,
             },
             render: (text, record) => (
-                <span>{(record.name && <span> {record.name} </span>)}</span>
+                <span>{(record?.name && <span> {record?.name} </span>)}</span>
             )
         },
         {
@@ -67,7 +67,7 @@ function UserPage() {
             dataIndex: 'email',
             key: 'email',
             sorter: {
-                compare: (a, b) => a.email - b.email,
+                compare: (a, b) => a?.email - b?.email,
                 multiple: 3,
             }
 
@@ -77,17 +77,17 @@ function UserPage() {
             dataIndex: 'city_detail',
             key: 'city',
             sorter: {
-                compare: (a, b) => a.city_detail - b.city_detail,
+                compare: (a, b) => a?.city_detail - b?.city_detail,
                 multiple: 3,
             },
-            render: city_detail => `${city_detail && city_detail.city}`
+            render: city_detail => `${city_detail && city_detail?.city}`
         },
         {
             title: 'Number',
             dataIndex: 'mobile',
             key: 'city',
             sorter: {
-                compare: (a, b) => a.mobile - b.mobile,
+                compare: (a, b) => a?.mobile - b?.mobile,
                 multiple: 3,
             }
         },
@@ -96,12 +96,12 @@ function UserPage() {
             dataIndex: 'created_at',
             key: 'join date',
             sorter: {
-                compare: (a, b) => a.created_at - b.created_at,
+                compare: (a, b) => a?.created_at - b?.created_at,
                 multiple: 3,
             },
             render: (text, record) => (
-                <span>{(record.created_at && <Moment format="YYYY/MM/DD">
-                    {record.created_at}
+                <span>{(record?.created_at && <Moment format="YYYY/MM/DD">
+                    {record?.created_at}
                 </Moment>)}</span>
             )
         },
@@ -110,11 +110,11 @@ function UserPage() {
             dataIndex: 'approve',
             key: 'status',
             sorter: {
-                compare: (a, b) => a.approve - b.approve,
+                compare: (a, b) => a?.approve - b?.approve,
                 multiple: 2,
             },
             render: (text, record) => (
-                <span>{(record.approve == '1' ? <span><h6>UnBlocked</h6> </span> : <span><h6>Blocked</h6></span>)}</span>
+                <span>{(record?.approve == '1' ? <span><h6>UnBlocked</h6> </span> : <span><h6>Blocked</h6></span>)}</span>
             )
         },
         {
@@ -123,8 +123,8 @@ function UserPage() {
             key: 'timing',
             render: (text, record) => (
                 <span>
-                     <span>{(record.approve == '0' ? 'Pending' : (record.approve == '1' ? <Switch defaultChecked onClick={((event) => SwitchReject(event, record.id))} /> : <Switch onClick={((event) => SwitchApprove(event, record.id))} />))}</span>
-                     <NavLink to={`/Admin/driverDetail/${record.id}`} className="fa fa-eye btn btn-outline-warning ml-3" ></NavLink>
+                     <span>{(record?.approve == '0' ? 'Pending' : (record?.approve == '1' ? <Switch defaultChecked onClick={((event) => SwitchReject(event, record?.id))} /> : <Switch onClick={((event) => SwitchApprove(event, record?.id))} />))}</span>
+                     <NavLink to={`/Admin/driverDetail/${record?.id}`} className="fa fa-eye btn btn-outline-warning ml-3" ></NavLink>
                 </span>
 
 
@@ -147,10 +147,10 @@ function UserPage() {
         axios.post(`${url}/UpdateRestaurantStatus`, { value: value1, id: id1 }, { headers: { Authorization: 'Bearer ' + token } })
             .then((response) => {
                 loadUserList()
-                message.success(`Status of ${response.data.name} has been Changed..!`)
+                message.success(`Status of ${response?.data?.name} has been Changed..!`)
             })
             .catch((response) => {
-                console.log(response.error)
+                console.log(response?.error)
             });
     }
 
@@ -229,7 +229,7 @@ function UserPage() {
 
                             </div>
 
-                            <Table dataSource={userData} columns={usercolumn} pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['05', '10', '20', '30'] }} />
+                            <Table dataSource={[]} columns={usercolumn} pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['05', '10', '20', '30'] }} />
                         </div>)
                     }
                 </div>

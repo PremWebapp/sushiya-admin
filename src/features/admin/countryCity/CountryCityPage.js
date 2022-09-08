@@ -1,81 +1,157 @@
 
-import { useState} from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import AsyncSelect from 'react-select/async';
-import axios from 'axios';
 import $ from 'jquery'
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { Table, Switch, Upload, Button, Select, Tag } from 'antd';
+import { cityFetchData, countryFetchData, addCountry, removeCountry, updateCountryStatus, updateCountry, addCity, updateCity, updateCityStatus, removeCity, dataForFilters } from "../../../redux/reducers/country&cityReducer";
+import { toast } from 'react-toastify';
+import { GiCrossMark } from "react-icons/gi";
+import TagRender from "./tagRender";
 
 function CountryCityPage() {
-    // Token 
-    // const token = localStorage.getItem('token');
     const { userData: { token, user } } = useSelector(state => state.auth)
+    const { countryList, cityList, countryListForFilter, countryListActiveForFilter, cityListForFilter,
+        cityListActiveForFilter, coucityLoading } = useSelector(state => state.countryAcity)
+    const dispatch = useDispatch()
 
-     // For City Form Data 
-     let [cityData, setCityData] = useState({
+    const options = [
+        {
+            value: 'Last 7 Days',
+        },
+        {
+            value: 'Last Month',
+        },
+        {
+            value: 'Last 6 Month',
+        },
+    ];
+
+    const OPTIONS = ['Apples', 'Nails', 'Bananas', 'Helicopters'];
+    const [selectedItems, setSelectedItems] = useState([]);
+    const filteredOptions = OPTIONS.filter((val) => !selectedItems.includes(val))
+
+    // For Image Data 
+    const [selectedImage, setSelectedImage] = useState();
+    const [img, setimg] = useState();
+    const [country, setCountry] = useState(true);
+    const [city, setCity] = useState(false);
+    const [countryId, setCountryId] = useState('');
+    const [cityId, setCityId] = useState('');
+    const [coutryUpdateImg, setcoutryUpdateImg] = useState();
+    const [coutryUpdate64Img, setcoutryUpdate64Img] = useState();
+    const [updateCountryData, setupdateCountryData] = useState();
+    const [updateCityData, setupdateCityData] = useState();
+
+    // For City Form Data 
+    let [cityData, setCityData] = useState({
         city: '',
         applicable_taxes: '',
         country_id: '',
 
-      });
+    });
 
-      const CityhandleChange = e => {
+    const CityhandleChange = e => {
         let name = e.target.name;
         let value = e.target.value;
         cityData[name] = value;
-        
         setCityData(cityData);
-        
     };
-// For Image Data 
-    const [selectedImage, setSelectedImage] = useState();
 
+    const updateCityhandleChange = e => {
+        const { name, value } = e.target
+        setupdateCityData({ ...updateCityData, [name]: value })
+    };
 
-    const [country, setCountry] = useState(true);
-    const [city, setCity] = useState(false);
-    // For Country Data 
+    useEffect(() => { setupdateCountryData(countryId) }, [countryId])
+    useEffect(() => { setupdateCityData(cityId) }, [cityId])
 
-    // const [inputValue, setValue] = useState();
-    const [selectedValue, setSelectedValue] = useState();
+    const countryColumn = [
+        {
+            title: 'Image',
+            dataIndex: 'country_image',
+            key: 'country_image',
+            render: (text, record) => (
+                <span>{(record.country_image ? <span><img alt='Menu_image' src={record.country_image} style={{ width: "30px", height: "30px", borderRadius: "25px" }} /> </span> : <span> <img alt='demo_image' style={{ width: "100px" }} /></span>)}</span>
+            )
+        },
+        {
+            title: 'Country Id',
+            dataIndex: 'id',
+            key: 'id',
+            sorter: {
+                compare: (a, b) => a.id - b.id,
+            },
+        },
 
-    // handle Input Change Event 
-
-    const handleInputChange = value => {
-        // setValue(value);
-    }
-
-
-    // handle Selection 
-
-    const handleChange = value => {
-
-        cityData['country_id'] = value.id;
-        
-        setCityData(cityData);
-  
-        setSelectedValue(value);
-    }
-
-    const fetchCountryData = () => {
-        return axios.get("http://localhost:8000/api/country", { headers: { Authorization: 'Bearer ' + token } })
-            .then((response) => {
-                const data = response.data;
-                console.log(data)
-                return data;
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
- 
-
+        {
+            title: 'Country Name',
+            dataIndex: 'country',
+            key: 'country',
+        },
+        {
+            title: 'Currency',
+            dataIndex: 'currency',
+            key: 'currency',
+        },
+        {
+            title: 'Action',
+            dataIndex: 'image',
+            key: 'name',
+            render: (text, record) => (
+                <span>
+                    <i class="fa-solid fa-pen-to-square fa-lg  rounded-circle curcer" data-toggle="modal" data-target="#CountryUpdateModal" onClick={() => setCountryId(record)} style={{ color: '#fc6011' }} id={record.id} ></i>
+                    <span className="px-3  rounded-circle ">
+                        <Switch size="small" defaultChecked={record.status === '0' ? false : true} id={record.id} data-bs-toggle="modal" data-bs-target="#updateCountryStatus" onClick={() => setCountryId(record)} />
+                    </span >
+                    <i className="curcer fa fa-trash fa-lg rounded-circle  bg-light text-danger" data-bs-toggle="modal" data-bs-target="#remodeCountry" id={record.id} onClick={() => setCountryId(record)}></i></span>
+            )
+        },
+    ]
+    const cityColumn = [
+        {
+            title: 'City Id',
+            dataIndex: 'country_id',
+            key: 'id',
+            sorter: {
+                compare: (a, b) => a.id - b.id,
+                multiple: 3,
+            }
+        },
+        {
+            title: 'Alloted Country',
+            dataIndex: 'country',
+            key: 'country',
+        },
+        {
+            title: 'City Name',
+            dataIndex: 'city',
+            key: 'city',
+        },
+        {
+            title: 'Action',
+            dataIndex: '',
+            key: '',
+            render: (text, record) => (
+                <span>
+                    <i class="fa-solid fa-pen-to-square fa-lg  rounded-circle curcer" data-toggle="modal" data-target="#updateCityModal" onClick={() => setCityId(record)} style={{ color: '#fc6011' }} id={record.id} ></i>
+                    <span className="px-3  rounded-circle ">
+                        <Switch size="small" defaultChecked={record.status === '0' ? false : true} id={record.id} data-bs-toggle="modal" data-bs-target="#updateCityStatus" onClick={() => setCityId(record)} />
+                    </span >
+                    <i className="curcer fa fa-trash fa-lg rounded-circle  bg-light text-danger" data-bs-toggle="modal" data-bs-target="#removeCity" id={record.id} onClick={() => setCityId(record)}></i></span>
+            )
+        },
+    ]
 
     // For Open Country and City Modal
-
     const openCity = (e) => {
         setCountry(false);
         setCity(true);
         e.target.classList.add('active');
+        $("#country").css("background-color", "#fff");
+        $("#country").css("color", "#858796");
+        $("#city").css("background-color", "#fc6011",);
+        $("#city").css("color", "#fff");
         $('#country').removeClass('active');
     }
 
@@ -83,60 +159,150 @@ function CountryCityPage() {
         setCountry(true);
         setCity(false);
         e.target.classList.add('active');
+        $("#city").css("background-color", "#fff");
+        $("#city").css("color", "#858796");
+        $("#country").css("background-color", "#fc6011");
+        $("#country").css("color", "#fff");
         $('#city').removeClass('active');
     }
 
     // For Save Country Form Data 
     const { register, handleSubmit } = useForm();
-
     const onSubmit = data => {
-        let dd = new FormData();
-        dd.append('country_image', selectedImage);
-        dd.append('country', data.country);
-        dd.append('currency', data.currency);
+        if (selectedImage) {
+            let dd = new FormData();
+            dd.append('country_image', selectedImage);
+            dd.append('country', data.country);
+            dd.append('currency', data.currency);
 
-        console.log(dd,'country form data');
+            // add counrty
+            dispatch(addCountry({ formData: dd, token }))
 
-        // Send a POST request
-
-        axios.post("http://localhost:8000/api/country", dd, { headers: { Authorization: 'Bearer ' + token } })
-            .then((response) => {
-                console.log(response,"country data");
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-
+            //get country
+            setTimeout(() => {
+                dispatch(countryFetchData({ token }))
+            }, 2000)
+        } else toast.warning('Please select a country image!')
     };
 
 
     // For Save City Form Data 
-    let saveCityData = (e) => {
+    const saveCityData = (e) => {
         e.preventDefault();
-        
-        axios.post("http://34.238.78.173/api/city",cityData, { headers: { Authorization: 'Bearer ' + token } })
-            .then((response) => {
-              
-                console.log(response,'from city api');
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-      }
+
+        dispatch(addCity({ data: cityData, token }))
+
+        setTimeout(() => {
+            dispatch(cityFetchData({ token }))
+        }, 2000)
+    }
+    const saveCityUpdateData = (e) => {
+        e.preventDefault();
+        dispatch(updateCity({ data: updateCityData, token }))
+
+        setTimeout(() => {
+            dispatch(cityFetchData({ token }))
+        }, 2000)
+    }
+
+    // fetch country and city
+    useEffect(() => {
+        $("#country").css("background-color", "#fc6011");
+        $("#country").css("color", "white");
+
+        dispatch(countryFetchData({ token }))
+        dispatch(cityFetchData({ token }))
+
+        setTimeout(() => {
+            dispatch(dataForFilters())
+        }, 2000)
+
+    }, [])
 
 
-    // This function will be triggered when the file field change
-    const imageChange = (e) => {
-        if (e.target.files && e.target.files.length > 0) {
-            setSelectedImage(e.target.files[0]);
-        }
-
+    const handleImgChange = (info) => {
+        setSelectedImage(info.file.originFileObj);
+        getBase64(info.file.originFileObj, (url) => {
+            setimg(url)
+        });
+    };
+    const handleCountryUpdateImgChange = (info) => {
+        setcoutryUpdateImg(info.file.originFileObj);
+        getBase64(info.file.originFileObj, (url) => {
+            setcoutryUpdate64Img(url)
+        });
     };
 
-    // This function will be triggered when the "X" button is clicked
-    const removeSelectedImage = () => {
-        setSelectedImage();
+    const getBase64 = (img, callback) => {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => callback(reader.result));
+        reader.readAsDataURL(img);
     };
+
+    const uploadButton = (
+        <div>
+            <div
+                style={{
+                    marginTop: 8,
+                }}
+            >
+                Upload
+            </div>
+        </div>
+    );
+
+    const handleCountryRemove = () => {
+        dispatch(removeCountry({ id: { id: countryId.id }, token }))
+        setTimeout(() => {
+            dispatch(countryFetchData({ token }))
+        }, 2000)
+    }
+
+    const handleCityRemove = () => {
+        dispatch(removeCity({ id: { id: cityId.id }, token }))
+        setTimeout(() => {
+            dispatch(cityFetchData({ token }))
+        }, 2000)
+    }
+
+    const handleCountryStatus = () => {
+        let status = ''
+        countryId.status === '0' ? status = '1' : status = '0'
+        dispatch(updateCountryStatus({ formData: { id: countryId.id, status: status }, token }))
+        setTimeout(() => {
+            dispatch(countryFetchData({ token }))
+        }, 2000)
+    }
+
+    const handleCityStatus = () => {
+        let status = ''
+        cityId.status === '0' ? status = '1' : status = '0'
+        dispatch(updateCityStatus({ data: { id: cityId.id, status: status }, token }))
+        setTimeout(() => {
+            dispatch(cityFetchData({ token }))
+        }, 2000)
+    }
+
+    const handelCountryupdatChange = (e) => {
+        const { name, value } = e.target
+        setupdateCountryData({ ...updateCountryData, [name]: value })
+    }
+
+    const handleCountryUpdateSubmit = (e) => {
+        e.preventDefault();
+        const formData = new FormData()
+        formData.append('id', updateCountryData.id)
+        formData.append('country', updateCountryData.country)
+        formData.append('currency', updateCountryData.currency)
+        formData.append('country_image', coutryUpdateImg)
+
+        dispatch(updateCountry({ formData, token }))
+
+        setTimeout(() => {
+            dispatch(countryFetchData({ token }))
+        }, 2000)
+        setcoutryUpdateImg()
+    }
 
     return (
         <>
@@ -144,14 +310,14 @@ function CountryCityPage() {
 
                 <div class="col-lg-12">
 
-                    <div class="card mb-4">
+                    <div class="card">
 
                         <div class="card-body">
-                            <h3 className="ml-5 colorblack bold">Country Management</h3>
+                            <h4 className="ml-5 colorblack bold">Country & City Management</h4>
                             <div className="mt-4 text-center">
                                 <div class="btn-group" style={{ minWidth: '50%' }}>
-                                    <button type="button" class="btn btn-outline-warning active" id="country" onClick={openCountry}>Country</button>
-                                    <button type="button" class="btn btn-outline-warning" onClick={openCity} id="city">City</button>
+                                    <button type="button" class="btn active border" id="country" onClick={openCountry}>Country</button>
+                                    <button type="button" class="btn border" onClick={openCity} id="city">City</button>
 
                                 </div>
                                 &nbsp;&nbsp;
@@ -165,195 +331,166 @@ function CountryCityPage() {
                             </div>
                         </div>
                     </div>
-
-
                 </div>
-
-
             </div>
-            <div className="container-fluid">
+            {/* lists */}
+            <div className="container-fluid ">
                 <div className="row">
-                    <div className="col-md-12 col-lg-12 col-sm-12">
-                        <table id="example" class="table table-striped table-bordered" style={{ width: '100%' }}>
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Position</th>
-                                    <th>Office</th>
-                                    <th>Age</th>
-                                    <th>Start date</th>
-                                    <th>Salary</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Tiger Nixon</td>
-                                    <td>System Architect</td>
-                                    <td>Edinburgh</td>
-                                    <td>61</td>
-                                    <td>2011/04/25</td>
-                                    <td>$320,800</td>
-                                </tr>
-                                <tr>
-                                    <td>Garrett Winters</td>
-                                    <td>Accountant</td>
-                                    <td>Tokyo</td>
-                                    <td>63</td>
-                                    <td>2011/07/25</td>
-                                    <td>$170,750</td>
-                                </tr>
-                                <tr>
-                                    <td>Ashton Cox</td>
-                                    <td>Junior Technical Author</td>
-                                    <td>San Francisco</td>
-                                    <td>66</td>
-                                    <td>2009/01/12</td>
-                                    <td>$86,000</td>
-                                </tr>
-                                <tr>
-                                    <td>Cedric Kelly</td>
-                                    <td>Senior Javascript Developer</td>
-                                    <td>Edinburgh</td>
-                                    <td>22</td>
-                                    <td>2012/03/29</td>
-                                    <td>$433,060</td>
-                                </tr>
-                                <tr>
-                                    <td>Airi Satou</td>
-                                    <td>Accountant</td>
-                                    <td>Tokyo</td>
-                                    <td>33</td>
-                                    <td>2008/11/28</td>
-                                    <td>$162,700</td>
-                                </tr>
-                                <tr>
-                                    <td>Brielle Williamson</td>
-                                    <td>Integration Specialist</td>
-                                    <td>New York</td>
-                                    <td>61</td>
-                                    <td>2012/12/02</td>
-                                    <td>$372,000</td>
-                                </tr>
-                                <tr>
-                                    <td>Herrod Chandler</td>
-                                    <td>Sales Assistant</td>
-                                    <td>San Francisco</td>
-                                    <td>59</td>
-                                    <td>2012/08/06</td>
-                                    <td>$137,500</td>
-                                </tr>
-                                <tr>
-                                    <td>Rhona Davidson</td>
-                                    <td>Integration Specialist</td>
-                                    <td>Tokyo</td>
-                                    <td>55</td>
-                                    <td>2010/10/14</td>
-                                    <td>$327,900</td>
-                                </tr>
-                                <tr>
-                                    <td>Colleen Hurst</td>
-                                    <td>Javascript Developer</td>
-                                    <td>San Francisco</td>
-                                    <td>39</td>
-                                    <td>2009/09/15</td>
-                                    <td>$205,500</td>
-                                </tr>
-                                <tr>
-                                    <td>Sonya Frost</td>
-                                    <td>Software Engineer</td>
-                                    <td>Edinburgh</td>
-                                    <td>23</td>
-                                    <td>2008/12/13</td>
-                                    <td>$103,600</td>
-                                </tr>
-                                <tr>
-                                    <td>Jena Gaines</td>
-                                    <td>Office Manager</td>
-                                    <td>London</td>
-                                    <td>30</td>
-                                    <td>2008/12/19</td>
-                                    <td>$90,560</td>
-                                </tr>
-                                <tr>
-                                    <td>Quinn Flynn</td>
-                                    <td>Support Lead</td>
-                                    <td>Edinburgh</td>
-                                    <td>22</td>
-                                    <td>2013/03/03</td>
-                                    <td>$342,000</td>
-                                </tr>
-                                <tr>
-                                    <td>Charde Marshall</td>
-                                    <td>Regional Director</td>
-                                    <td>San Francisco</td>
-                                    <td>36</td>
-                                    <td>2008/10/16</td>
-                                    <td>$470,600</td>
-                                </tr>
-                                <tr>
-                                    <td>Haley Kennedy</td>
-                                    <td>Senior Marketing Designer</td>
-                                    <td>London</td>
-                                    <td>43</td>
-                                    <td>2012/12/18</td>
-                                    <td>$313,500</td>
-                                </tr>
-                                <tr>
-                                    <td>Tatyana Fitzpatrick</td>
-                                    <td>Regional Director</td>
-                                    <td>London</td>
-                                    <td>19</td>
-                                    <td>2010/03/17</td>
-                                    <td>$385,750</td>
-                                </tr>
-                                <tr>
-                                    <td>Michael Silva</td>
-                                    <td>Marketing Designer</td>
-                                    <td>London</td>
-                                    <td>66</td>
-                                    <td>2012/11/27</td>
-                                    <td>$198,500</td>
-                                </tr>
-                                <tr>
-                                    <td>Paul Byrd</td>
-                                    <td>Chief Financial Officer (CFO)</td>
-                                    <td>New York</td>
-                                    <td>64</td>
-                                    <td>2010/06/09</td>
-                                    <td>$725,000</td>
-                                </tr>
-                                <tr>
-                                    <td>Gloria Little</td>
-                                    <td>Systems Administrator</td>
-                                    <td>New York</td>
-                                    <td>59</td>
-                                    <td>2009/04/10</td>
-                                    <td>$237,500</td>
-                                </tr>
-                                <tr>
-                                    <td>Bradley Greer</td>
-                                    <td>Software Engineer</td>
-                                    <td>London</td>
-                                    <td>41</td>
-                                    <td>2012/10/13</td>
-                                    <td>$132,000</td>
-                                </tr>
+                    <div className="col-md-12 col-lg-12 col-sm-12 ">
 
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Position</th>
-                                    <th>Office</th>
-                                    <th>Age</th>
-                                    <th>Start date</th>
-                                    <th>Salary</th>
-                                </tr>
-                            </tfoot>
-                        </table>
+                        {
+                            country && <>
+                                <div className="row row-cols-1 row-cols-sm-5 row-cols-md-5 row-cols-lg-5  py-4 bg-white border rounded my-4">
+                                    <div className="col ">
+                                        <div class="input-group mb-2 d-flex">
+                                            <span class="input-group-text " id="basic-addon1"><i className="fa fa-search"></i></span>
+                                            <Select
+                                                mode="multiple"
+                                                allowClear
+                                                placeholder="Search By Name"
+                                                showArrow
+                                                style={{
+                                                    width: '85%',
+                                                }}
+                                                options={countryListForFilter}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="col ">
+                                        <div class="input-group mb-2">
+                                            <Select
+                                                mode="single"
+                                                allowClear
+                                                placeholder="Search By Duration"
+                                                showArrow
+                                                style={{
+                                                    width: '100%',
+                                                }}
+                                                options={options}
+                                            />
+
+                                        </div>
+                                    </div>
+                                    <div className="col ">
+                                        <div class="input-group mb-2">
+                                            <Select
+                                                mode="single"
+                                                allowClear
+                                                placeholder="Search By Country"
+                                                showArrow
+                                                style={{
+                                                    width: '100%',
+                                                }}
+                                                options={countryListForFilter}
+                                            />
+
+                                        </div>
+                                    </div>
+                                    <div className="col ">
+                                        <div class="input-group mb-2">
+                                            <Select
+                                                mode="single"
+                                                allowClear
+                                                placeholder="Search By Active Country"
+                                                showArrow
+                                                style={{
+                                                    width: '100%',
+                                                }}
+                                                options={countryListActiveForFilter}
+                                            />
+
+                                        </div>
+                                    </div>
+                                    <div className="col">
+                                        <div class="input-group mb-2 ">
+                                            <Button type="danger " className=' px-4 ' icon={GiCrossMark}>Clear</Button>
+                                            <Button type="primary" className="mx-2">Submit</Button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </>
+                        }
+                        {
+                            city && <>
+                                <div className="row row-cols-1 row-cols-sm-5 row-cols-md-5 row-cols-lg-5  py-4 bg-white border rounded my-4">
+
+                                    <div className="col ">
+                                        <div class="input-group mb-3">
+                                            <span class="input-group-text " id="basic-addon1"><i className="fa fa-search"></i></span>
+                                            <Select
+                                                mode="multiple"
+                                                allowClear
+                                                placeholder="Search By Name"
+                                                showArrow
+                                                style={{
+                                                    width: '85%',
+                                                }}
+                                                options={cityListForFilter}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col ">
+                                        <div class="input-group mb-3">
+                                            <Select
+                                                mode="multiple"
+                                                allowClear
+                                                placeholder="Search By Duration"
+                                                showArrow
+                                                style={{
+                                                    width: '100%',
+                                                }}
+                                                options={options}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col ">
+                                        <div class="input-group mb-3">
+                                            <Select
+                                                mode="multiple"
+                                                allowClear
+                                                placeholder="Search By Country"
+                                                showArrow
+                                                style={{
+                                                    width: '100%',
+                                                }}
+                                                options={cityListForFilter}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col ">
+                                        <div class="input-group mb-3">
+                                            <Select
+                                                mode="multiple"
+                                                allowClear
+                                                placeholder="Search By Active Country"
+                                                showArrow
+                                                style={{
+                                                    width: '100%',
+                                                }}
+                                                options={countryListForFilter}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col">
+                                        <div class="input-group mb-2 ">
+                                            <Button type="danger " className=' px-4 ' icon={GiCrossMark}>Clear</Button>
+                                            <Button type="primary" className="mx-2">Submit</Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                        }
+
+                        {country ?
+                            <Table loading={coucityLoading} dataSource={countryList} columns={countryColumn} pagination={{ defaultPageSize: 6, showSizeChanger: true, pageSizeOptions: ['05', '10', '20', '30'] }} /> :
+                            <Table loading={coucityLoading} dataSource={cityList} columns={cityColumn} pagination={{ defaultPageSize: 6, showSizeChanger: true, pageSizeOptions: ['05', '10', '20', '30'] }} />}
                     </div>
                 </div>
             </div>
+
+
             {/* Country Modal */}
             <div class="modal fade" id="CountryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -369,50 +506,106 @@ function CountryCityPage() {
                                 <div className="row">
                                     <div className="col-md-6 col-lg-6 col-sm-12">
                                         <label className="colorblack bold">Country Name</label>
-                                        <input {...register("country", { required: false, maxLength: 20 })} />
-                                        {/* <input type="text" className="from-control" /> */}
+                                        <input className="form-control" name='country'  {...register("country", { required: true, maxLength: 20 })} />
                                     </div>
                                     <div className="col-md-6 col-lg-6 col-sm-12">
-                                        <label className="colorblack bold">Country Currency</label>
-                                        <input {...register("currency", { required: false, maxLength: 20 })} />
+                                        <label className="colorblack bold d-block ">Country Currency</label>
+                                        <select className="form-control d-block w-100 pt-1" {...register("currency", { required: true })}>
+                                            <option value="USD">USD</option>
+                                            <option value="EUR">EUR</option>
+                                            <option value="GBP">GBP</option>
+                                            <option value="KRW">KRW</option>
+                                            <option value="EUR">EUR</option>
+                                            <option value="INR">INR</option>
 
-                                        {/* <input type="text" className="from-control" /> */}
+                                        </select>
                                     </div>
-                                    <div className="col-md-6 col-lg-6 col-sm-12 mt-4">
-                                        <label className="colorblack bold">Upload Image</label>
 
-                                        <input
-                                            accept="image/*"
-                                            type="file"
-                                            name="country_image"
-                                            onChange={imageChange}
-                                        />
-                                    </div>
                                     <div className="col-md-6 col-lg-6 col-sm-12 mt-4">
-                                        {selectedImage && (
-
-                                            <div className="col-md-12 col-lg-12 " >
-                                                <button onClick={removeSelectedImage} className="btn btn-sm mr-4" style={{ float: 'right', color: 'black', fontWeight: 'bolder' }}>
-                                                    X
-                                                </button><br />
+                                        <Upload
+                                            name="avatar"
+                                            listType="picture-card"
+                                            className="avatar-uploader"
+                                            showUploadList={false}
+                                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                            onChange={handleImgChange}
+                                        >
+                                            {img ? (
                                                 <img
-                                                    src={URL.createObjectURL(selectedImage)}
-                                                    alt="country_image"
-                                                    style={{ maxWidth: '80%', minWidth: '80%', maxHeight: '130px' }}
+                                                    src={img}
+                                                    alt="avatar"
+                                                    style={{
+                                                        width: '100%',
+                                                    }}
                                                 />
-
-                                            </div>
-                                        )}
-
-
+                                            ) : (
+                                                uploadButton
+                                            )}
+                                        </Upload>
                                     </div>
-
                                 </div>
                             </div>
-
                             <div class="modal-footer">
-                                {/* <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> */}
                                 <button type="submit" class="btn btn-primary">Add Country</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+
+            {/* update Country   */}
+            <div class="modal fade" id="CountryUpdateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title ml-auto colorblack bold" id="exampleModalLongTitle" >Update Country</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form onSubmit={handleCountryUpdateSubmit}>
+                            <div class="modal-body">
+                                <div className="row">
+                                    <div className="col-md-6 col-lg-6 col-sm-12">
+                                        <label className="colorblack bold">Country Name</label>
+                                        <input onChange={handelCountryupdatChange} className="form-control" name='country' defaultValue={countryId.country} />
+                                    </div>
+                                    <div className="col-md-6 col-lg-6 col-sm-12">
+                                        <label className="colorblack bold d-block ">Country Currency</label>
+                                        <select onChange={handelCountryupdatChange} defaultValue={countryId.currency} className="form-control d-block w-100" name='currency'>
+                                            <option selected={countryId.currency == "USD" ? true : false} value="USD">USD</option>
+                                            <option selected={countryId.currency == "EUR" ? true : false} value="EUR">EUR</option>
+                                            <option selected={countryId.currency == "GBP" ? true : false} value="GBP">GBP</option>
+                                            <option selected={countryId.currency == "KRW" ? true : false} value="KRW">KRW</option>
+                                            <option selected={countryId.currency == "EUR" ? true : false} value="EUR">EUR</option>
+                                            <option selected={countryId.currency == "INR" ? true : false} value="INR">INR</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="col-md-6 col-lg-6 col-sm-12 mt-4">
+                                        <Upload
+                                            name="avatar"
+                                            listType="picture-card"
+                                            className="avatar-uploader"
+                                            showUploadList={false}
+                                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                            onChange={handleCountryUpdateImgChange}
+                                        >
+                                            <img
+                                                src={coutryUpdate64Img || countryId.country_image}
+                                                alt="avatar"
+                                                style={{
+                                                    width: '100%',
+                                                }}
+                                            />
+                                        </Upload>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Update Country</button>
                             </div>
                         </form>
                     </div>
@@ -434,41 +627,160 @@ function CountryCityPage() {
                                 <div className="row">
                                     <div className="col-md-6 col-lg-6 col-sm-12">
                                         <label className="colorblack bold">Country Name</label>
-                                        <AsyncSelect
-                                            cacheOptions
-                                            defaultOptions
-                                            value={selectedValue}
-                                            getOptionLabel={e => e.country} 
-                                            getOptionValue={e => e.id}
-                                            loadOptions={fetchCountryData} 
-                                            onInputChange={handleInputChange}
-                                            onChange={handleChange}
-
-                                        />
-
+                                        <select className="form-control" name='country_id' onChange={CityhandleChange} required>
+                                            <option value="">Select Country</option>
+                                            {countryList?.map(val => {
+                                                return <option key={val.id} value={val.id}>{val.country}</option>
+                                            })}
+                                        </select>
                                     </div>
                                     <div className="col-md-6 col-lg-6 col-sm-12">
                                         <label className="colorblack bold">City</label>
-                                        <input className="form-control" type="text" name="city" onChange={CityhandleChange} />
+                                        <input className="form-control" type="text" name="city" onChange={CityhandleChange} required />
                                     </div>
                                     <div className="col-md-6 col-lg-6 col-sm-12">
                                         <label className="colorblack bold">Payable Tax</label>
-                                        <input className="form-control" type="text" name="applicable_taxes" onChange={CityhandleChange} />
+                                        <input className="form-control" min='0' type="number" name="applicable_taxes" onChange={CityhandleChange} required />
                                     </div>
-                                    
-                                    
-                                
                                 </div>
                             </div>
 
                             <div class="modal-footer">
                                 {/* <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> */}
-                                <button type="submit" class="btn btn-primary">Add Country</button>
+                                <button type="submit" class="btn btn-primary">Add City</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
+
+            {/* update city */}
+
+            <div class="modal fade" id="updateCityModal" tabindex="-1" role="dialog" aria-labelledby="CityModalTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title ml-auto colorblack bold" id="exampleModalLongTitle" >Update City</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form onSubmit={saveCityUpdateData}>
+                            <div class="modal-body">
+                                <div className="row">
+                                    <div className="col-md-6 col-lg-6 col-sm-12">
+                                        <label className="colorblack bold">Country Name</label>
+                                        <select className="form-control" name='country_id' onChange={updateCityhandleChange} required>
+                                            <option value="">Select Country</option>
+                                            {countryList?.map(val => {
+                                                return <option selected={val.country == cityId.country} key={val.country_id} value={val.country_id}>{val.country}</option>
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div className="col-md-6 col-lg-6 col-sm-12">
+                                        <label className="colorblack bold">City</label>
+                                        <input className="form-control" defaultValue={cityId.city} type="text" name="city" onChange={updateCityhandleChange} required />
+                                    </div>
+                                    <div className="col-md-6 col-lg-6 col-sm-12">
+                                        <label className="colorblack bold">Payable Tax</label>
+                                        <input className="form-control" defaultValue={cityId.applicable_taxes} min='0' type="number" name="applicable_taxes" onChange={updateCityhandleChange} required />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                {/* <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> */}
+                                <button type="submit" class="btn btn-primary">Update City</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            {/*  remove country  popup */}
+            <div class="modal fade" id="remodeCountry" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Ready to Remove?</h5>
+                            <button className="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to remove your country!
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close" onClick={() => handleCountryRemove()}>Remove</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/*  remove city  popup */}
+            <div class="modal fade" id="removeCity" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Ready to Remove?</h5>
+                            <button className="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to remove your city!
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close" onClick={() => handleCityRemove()}>Remove</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* update country status */}
+            <div class="modal fade" id="updateCountryStatus" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Ready to Update Status?</h5>
+                            <button className="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to update your country status!
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close" onClick={() => handleCountryStatus(countryId)}>Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* update city status */}
+            <div class="modal fade" id="updateCityStatus" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Ready to Update Status?</h5>
+                            <button className="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to update your city status!
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close" onClick={() => handleCityStatus(cityId)}>Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </>
     )
 }

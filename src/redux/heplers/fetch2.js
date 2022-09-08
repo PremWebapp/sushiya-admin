@@ -53,13 +53,13 @@ export const deleteItems = async (api,token = '') => {
 }
 
 // this function will be triggered when api call with tokens && POST with formData
-export const postWithImageItems = async (api, data = '', token = '', type = 'GET') => {
+export const postWithImageItems = async (api, formData = '', token = '') => {
     const res = await fetch(api, {
-        method: type, // or 'PUT'
+        method: 'POST', // or 'PUT'
         headers: {
             'Authorization': 'Bearer ' + token,
         },
-        body: data,
+        body: formData,
     })
     const result = await res.json()
     return result

@@ -4,7 +4,6 @@ import parkData from "./sampleUserData.json"
 // import * as parkData from "./sampleUserData.json"
 import mapStyles from "./mapstyle";
 
-console.log('parkData..............................', parkData)
 
 function Map() {
     const [selectedPark, setSelectedPark] = useState(null);

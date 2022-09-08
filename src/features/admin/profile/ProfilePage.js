@@ -20,21 +20,21 @@ function ProfilePage() {
                                 <tbody>
                                     <tr>
                                         <th>Name</th>
-                                        <td><input type="text" readOnly="true" className='form-control' value={data.name}/></td>
+                                        <td><input type="text" readOnly="true" className='form-control' value={data?.name}/></td>
                                         <th>Email</th>
-                                        <td><input readOnly="true" type="text" className='form-control' value={data.email} /></td>
+                                        <td><input readOnly="true" type="text" className='form-control' value={data?.email} /></td>
                                         </tr>
                                         <tr>
                                         <th>Mobile Number</th>
-                                        <td><input readOnly="true" type="text" className='form-control' value={data.mobile} /></td>
+                                        <td><input readOnly="true" type="text" className='form-control' value={data?.mobile} /></td>
                                         <th>Country</th>
                                         <td><input readOnly="true" type="text" className='form-control' /></td>
                                         </tr>
                                         <tr>
                                         <th>City</th>
-                                        <td><input readOnly="true" type="text" className='form-control' value={data.city}/></td>
+                                        <td><input readOnly="true" type="text" className='form-control' value={data?.city}/></td>
                                         <th>Address</th>
-                                        <td><input readOnly="true" type="text" className='form-control' value={data.add_type} /></td>
+                                        <td><input readOnly="true" type="text" className='form-control' value={data?.add_type} /></td>
                                     </tr>
                                 </tbody>
                             </table>

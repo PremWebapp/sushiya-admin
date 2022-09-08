@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import { postApiWithoutToken, postItems } from '../heplers/fetch2';
 import { PathUrl, baseUrl } from '../../config/Config';
-import swal from 'sweetalert';
+// import swal from 'sweetalert';
+import { toast } from 'react-toastify';
 
 // const logout = createAction('auth/logout')
 
@@ -41,19 +42,19 @@ const authSlice = createSlice({
     extraReducers: {
         //login extraReducers
         [authFun.rejected]: (state, { payload }) => {
-            swal("Bad Call!", 'Some error occurred in server side and we are working on it!', "warning")
+            toast.error("Some error occurred in server side and we are working on it!");
             state.authLoading = false
             state.userData = []
         },
-        [authFun.fulfilled]: (state, { payload: { data, status, error, code } }) => {
-            if (status == 'success' || code == 200) {
+        [authFun.fulfilled]: (state, { payload: { data, error, code } }) => {
+            if (code == 200) {
                 state.authLoading = false
                 state.userData = data
-                swal("Good job!", "Logged In succesfully!", "success");
+                toast.success("Logged in successfully !")
             } else {
-                swal("Bad Call!", "Credentials does not match!", "warning")
                 state.authLoading = false
                 state.userData = []
+                toast.error(error)
             }
         },
         [authFun.pending]: (state, { payload }) => {
@@ -63,10 +64,10 @@ const authSlice = createSlice({
 
         // logout extraReducers
         [logoutFun.fulfilled]: (state, { payload }) => {
-            swal("Good job!", "Logout succesfully!", "success");
+            toast.success("Logout successfully !")
         },
         [logoutFun.rejected]: (state, { payload }) => {
-            swal("Bad Call!", 'Some error occurred in server side!', "warning")
+            toast.error("Some error occurred in server side and we are working on it!");
         },
         [logoutFun.pending]: (state, { payload }) => {
         },

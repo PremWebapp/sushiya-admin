@@ -15,7 +15,6 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import SushiyaLogo from "../../../img/sushiya_logo.png";
 
 export const Login = () => {
-
   let navigate = useNavigate();
   const dispatch = useDispatch()
   const currentLocation = useLocation().pathname
@@ -31,35 +30,23 @@ export const Login = () => {
 
   // this function will be triggered when founded token  and admin type
   useEffect(() => {
-      if (token && user.type === "admin") navigate(currentLocation);
-      // eslint-disable-next-line
+    if (token && user.type === "admin") navigate(currentLocation);
+    // eslint-disable-next-line
   }, [])
 
   // this function will be triggered when founded token changes
   useEffect(() => {
-      if (token && user.type === "admin") navigate("/Admin");
+    if (token && user.type === "admin") navigate("/Admin");
   }, [token])
 
   // socket.on('connect', function (con) {
   //     console.log(con)
   // })
 
-
-  // For Staff Type Form Data 
-  let [login, setLogin] = useState({
-      mobile: '',
-      password: '',
-
-  });
-
-  // For Staff Type Form Data Filling
-  const loginChange = e => {
-      let { name, value } = e.target;
-      if (name === 'mobile') setLogin({ ...login, [name]: value.replace(/\D/g, "") })
-      else setLogin({ ...login, [name]: value });
-  };
   return (
     <div className={styles.LoginContainer}>
+
+
       <Row justify="space-around" align="middle">
         <Col lg={12}>
           <img
@@ -86,16 +73,16 @@ export const Login = () => {
               initialValues={{ remember: true }}
               onFinish={onFinish}
               onFinishFailed={onFinishFailed}
-              // autoComplete="off"
+            // autoComplete="off"
             >
               <Form.Item label="Mobile Number" name="mobile"
-               rules={[
+                rules={[
                   {
                     pattern: /^[\d]{10,10}$/,
                     message: "mobile number should be 10 character",
                   },
-                { required: true, message: "Please input your mobile number!" },
-              ]}>
+                  { required: true, message: "Please input your mobile number!" },
+                ]}>
                 <Input
                   prefix={<UserOutlined className="site-form-item-icon" />}
                   placeholder="mobile"

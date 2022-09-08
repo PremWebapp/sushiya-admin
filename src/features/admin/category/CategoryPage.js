@@ -76,9 +76,6 @@ function CategoryPage() {
 // For Category Image 
     const [selectedImageCategory, setSelectedImageCategory] = useState();
 
-
-
-
     // For Menu 
     const MenuList = () => {
         axios.get(`${url}/menu`, { headers: { Authorization: 'Bearer ' + token } })
