@@ -20,6 +20,8 @@ function UserPage() {
 
     useEffect(() => {
         loadUserList()
+        $("#restMap").css("background-color", "#fc6011");
+        $("#restMap").css("color", "white");
          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -160,6 +162,13 @@ function UserPage() {
         setRestaurantMap(false);
         setRestaurantList(true);
         e.target.classList.add('active');
+        // $('#restMap').removeClass('active');
+        
+
+        $("#restMap").css("background-color", "#fff");
+        $("#restMap").css("color", "#858796");
+        $("#restList").css("background-color", "#fc6011",);
+        $("#restList").css("color", "#fff");
         $('#restMap').removeClass('active');
     }
 
@@ -170,6 +179,13 @@ function UserPage() {
         setRestaurantList(false);
 
         e.target.classList.add('active');
+        // $('#restList').removeClass('active');
+
+
+        $("#restList").css("background-color", "#fff");
+        $("#restList").css("color", "#858796");
+        $("#restMap").css("background-color", "#fc6011",);
+        $("#restMap").css("color", "#fff");
         $('#restList').removeClass('active');
     }
     return (
@@ -184,8 +200,8 @@ function UserPage() {
                             <h3 className="ml-5 colorblack bold">User Management</h3>
                             <div className="mt-4 text-center">
                                 <div class="btn-group" style={{ minWidth: '50%' }}>
-                                    <button type="button" class="btn btn-outline-warning active" id="restMap" onClick={openMap}>Map View</button>
-                                    <button type="button" class="btn btn-outline-warning" onClick={openList} id="restList">List View</button>
+                                    <button type="button" class="btn border active" id="restMap" onClick={openMap}>Map View</button>
+                                    <button type="button" class="btn border" onClick={openList} id="restList">List View</button>
 
                                 </div>
                             </div>
