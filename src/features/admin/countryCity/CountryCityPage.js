@@ -339,14 +339,14 @@ function CountryCityPage() {
                                 <div className="row row-cols-1 row-cols-sm-5 row-cols-md-5 row-cols-lg-5  py-4 bg-white border rounded my-4">
                                     <div className="col ">
                                         <div class="input-group mb-2 d-flex">
-                                            <span class="input-group-text " id="basic-addon1"><i className="fa fa-search"></i></span>
+                                            {/* <span class="input-group-text " id="basic-addon1"><i className="fa fa-search"></i></span> */}
                                             <Select
                                                 mode="multiple"
                                                 allowClear
                                                 placeholder="Search By Name"
                                                 showArrow
                                                 style={{
-                                                    width: '85%',
+                                                    width: '100%',
                                                 }}
                                                 options={countryListForFilter}
                                             />
@@ -414,14 +414,14 @@ function CountryCityPage() {
 
                                     <div className="col ">
                                         <div class="input-group mb-3">
-                                            <span class="input-group-text " id="basic-addon1"><i className="fa fa-search"></i></span>
+                                            {/* <span class="input-group-text " id="basic-addon1"><i className="fa fa-search"></i></span> */}
                                             <Select
                                                 mode="multiple"
                                                 allowClear
                                                 placeholder="Search By Name"
                                                 showArrow
                                                 style={{
-                                                    width: '85%',
+                                                    width: '100%',
                                                 }}
                                                 options={cityListForFilter}
                                             />

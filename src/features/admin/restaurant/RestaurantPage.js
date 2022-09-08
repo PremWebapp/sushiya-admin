@@ -414,7 +414,7 @@ const RestaurantPage = () => {
                                 &nbsp;&nbsp;
                                 {
                                     // addList && (<button type="button" class="btn btn-outline-dark" style={{ minWidth: '20%', float: 'right' }} data-toggle="modal" data-target="#CountryModal">Add</button>)
-                                    addList && (<Button  type='primary' size="medium" style={{ minWidth: '10%', float: 'right' }} data-toggle="modal" data-target="#CountryModal">Add</Button>)
+                                    !restaurantMap && (<Button  type='primary' size="medium" style={{ minWidth: '10%', float: 'right' }} data-toggle="modal" data-target="#CountryModal">Add</Button>)
                                 }
                                 {/* </div> */}
 
@@ -436,14 +436,14 @@ const RestaurantPage = () => {
                          {!restaurantMap &&<div className="row  row-cols-auto py-4 bg-white border rounded my-4">
                                 <div className="col">
                                     <div class="input-group mb-3">
-                                        <span class="input-group-text " id="basic-addon1"><i className="fa fa-search"></i></span>
+                                        {/* <span class="input-group-text " id="basic-addon1"><i className="fa fa-search"></i></span> */}
                                         <Select
                                             mode="multiple"
                                             allowClear
                                             placeholder="Search By Name"
                                             showArrow
                                             style={{
-                                                width: '75%',
+                                                width: '100%',
                                             }}
                                             options={options}
                                         />
