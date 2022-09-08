@@ -28,8 +28,8 @@ function RestroDetailContent(props) {
     const restroDetail = async () => {
         await axios.post(`${url}/restroDetail`, { id: id }, { headers: { Authorization: 'Bearer ' + token } })
             .then((response) => {
-                console.log(response.data.data, "after Api Hit")
-                setRestroDetailData(response.data.data)
+                console.log(response?.data?.data, "after Api Hit")
+                setRestroDetailData(response?.data?.data)
             })
             .catch((error) => {
                 console.error(error);
@@ -125,7 +125,7 @@ function RestroDetailContent(props) {
                                                 <label>Service Provider ID</label>
                                             </div>
                                             <div className='col-md-8'>
-                                                <input className='form-control' type="text" readOnly value={restroDetailData.id} />
+                                                <input className='form-control' type="text" readOnly value={restroDetailData?.id} />
                                             </div>
                                         </div>
 
@@ -134,7 +134,7 @@ function RestroDetailContent(props) {
                                                 <label>DOJ</label>
                                             </div>
                                             <div className='col-md-8'>
-                                                <Moment className='form-control' readOnly format="YYYY/MM/DD">{restroDetailData.created_at}</Moment>
+                                                <Moment className='form-control' readOnly format="YYYY/MM/DD">{restroDetailData?.created_at}</Moment>
                                             </div>
                                         </div>
 
@@ -143,7 +143,7 @@ function RestroDetailContent(props) {
                                                 <label>Name</label>
                                             </div>
                                             <div className='col-md-8'>
-                                                <input className='form-control' type="text" readOnly value={restroDetailData.name} />
+                                                <input className='form-control' type="text" readOnly value={restroDetailData?.name} />
                                             </div>
                                         </div>
 
@@ -152,7 +152,7 @@ function RestroDetailContent(props) {
                                                 <label>Mobile</label>
                                             </div>
                                             <div className='col-md-8'>
-                                                <input className='form-control' type="text" readOnly value={restroDetailData.mobile} />
+                                                <input className='form-control' type="text" readOnly value={restroDetailData?.mobile} />
                                             </div>
                                         </div>
 
@@ -161,7 +161,7 @@ function RestroDetailContent(props) {
                                                 <label>Email</label>
                                             </div>
                                             <div className='col-md-8'>
-                                                <input className='form-control' type="text" readOnly value={restroDetailData.email} />
+                                                <input className='form-control' type="text" readOnly value={restroDetailData?.email} />
                                             </div>
                                         </div>
 
@@ -170,7 +170,7 @@ function RestroDetailContent(props) {
                                                 <label>City</label>
                                             </div>
                                             <div className='col-md-8'>
-                                                <input className='form-control' type="text" readOnly value={restroDetailData.city} />
+                                                <input className='form-control' type="text" readOnly value={restroDetailData?.city} />
                                             </div>
                                         </div>
 
@@ -179,7 +179,7 @@ function RestroDetailContent(props) {
                                                 <label>Address</label>
                                             </div>
                                             <div className='col-md-8'>
-                                                <textarea className='form-control' type="text" readOnly value={restroDetailData.add_type} />
+                                                <textarea className='form-control' type="text" readOnly value={restroDetailData?.add_type} />
                                             </div>
                                         </div>
 
@@ -220,7 +220,7 @@ function RestroDetailContent(props) {
                                         <label>TOTAL ORDER RECEIVED</label>
                                     </div>
                                     <div className='col-md-2 mt-3'>
-                                        <input className='form-control' type="text" readOnly value={restroDetailData.id} />
+                                        <input className='form-control' type="text" readOnly value={restroDetailData?.id} />
                                     </div>
                                     <div className='col-md-1 mt-3'></div>
 
@@ -229,7 +229,7 @@ function RestroDetailContent(props) {
                                         <label>LAST ORDER PLACED</label>
                                     </div>
                                     <div className='col-md-2 mt-3'>
-                                        <input className='form-control' type="text" readOnly value={restroDetailData.id} />
+                                        <input className='form-control' type="text" readOnly value={restroDetailData?.id} />
                                     </div>
                                     <div className='col-md-1 mt-3'></div>
 
@@ -238,7 +238,7 @@ function RestroDetailContent(props) {
                                         <label>TOTAL ORDER COMPLETED</label>
                                     </div>
                                     <div className='col-md-2 mt-3'>
-                                        <input className='form-control' type="text" readOnly value={restroDetailData.id} />
+                                        <input className='form-control' type="text" readOnly value={restroDetailData?.id} />
                                     </div>
                                     <div className='col-md-1 mt-3'></div>
 
@@ -246,7 +246,7 @@ function RestroDetailContent(props) {
                                         <label>TOTAL CANCELLATION</label>
                                     </div>
                                     <div className='col-md-2 mt-3'>
-                                        <input className='form-control' type="text" readOnly value={restroDetailData.id} />
+                                        <input className='form-control' type="text" readOnly value={restroDetailData?.id} />
                                     </div>
                                     <div className='col-md-1 mt-3'></div>
 
@@ -254,7 +254,7 @@ function RestroDetailContent(props) {
                                         <label>TOTAL ORDER RECEIVED WEEKLY</label>
                                     </div>
                                     <div className='col-md-2 mt-3'>
-                                        <input className='form-control' type="text" readOnly value={restroDetailData.id} />
+                                        <input className='form-control' type="text" readOnly value={restroDetailData?.id} />
                                     </div>
                                     <div className='col-md-1 mt-3'></div>
 
@@ -269,7 +269,7 @@ function RestroDetailContent(props) {
                                         <label>TOTAL ORDER RECEIVED MONTHLY</label>
                                     </div>
                                     <div className='col-md-2 mt-3 mb-3'>
-                                        <input className='form-control' type="text" readOnly value={restroDetailData.id} />
+                                        <input className='form-control' type="text" readOnly value={restroDetailData?.id} />
                                     </div>
                                     <div className='col-md-1 mt-3'></div>
 

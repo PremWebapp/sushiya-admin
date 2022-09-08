@@ -6,8 +6,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { Table, Switch, Upload, Button, Select, Tag } from 'antd';
 import { cityFetchData, countryFetchData, addCountry, removeCountry, updateCountryStatus, updateCountry, addCity, updateCity, updateCityStatus, removeCity, dataForFilters } from "../../../redux/reducers/country&cityReducer";
 import { toast } from 'react-toastify';
-import { GiCrossMark } from "react-icons/gi";
-import TagRender from "./tagRender";
 
 function CountryCityPage() {
     const { userData: { token, user } } = useSelector(state => state.auth)
@@ -26,10 +24,6 @@ function CountryCityPage() {
             value: 'Last 6 Month',
         },
     ];
-
-    const OPTIONS = ['Apples', 'Nails', 'Bananas', 'Helicopters'];
-    const [selectedItems, setSelectedItems] = useState([]);
-    const filteredOptions = OPTIONS.filter((val) => !selectedItems.includes(val))
 
     // For Image Data 
     const [selectedImage, setSelectedImage] = useState();
@@ -322,10 +316,12 @@ function CountryCityPage() {
                                 </div>
                                 &nbsp;&nbsp;
                                 {
-                                    country && (<button type="button" class="btn btn-outline-dark" style={{ minWidth: '20%', float: 'right' }} data-toggle="modal" data-target="#CountryModal">Add</button>)
+                                    // country && (<button type="button" class="btn btn-outline-dark" style={{ minWidth: '20%', float: 'right' }} data-toggle="modal" data-target="#CountryModal">Add</button>)
+                                    country && (<Button  type='primary' size="medium" style={{ minWidth: '10%', float: 'right' }} data-toggle="modal" data-target="#CountryModal">Add</Button >)
                                 }
                                 {
-                                    city && (<button type="button" class="btn btn-outline-dark" style={{ minWidth: '20%', float: 'right' }} data-toggle="modal" data-target="#CityModal">Add</button>)
+                                    // city && (<button type="button" class="btn btn-outline-dark" style={{ minWidth: '20%', float: 'right' }} data-toggle="modal" data-target="#CityModal">Add</button>)
+                                    city && (<Button type='primary' size="medium"  style={{ minWidth: '10%', float: 'right' }} data-toggle="modal" data-target="#CityModal">Add</Button>)
                                 }
 
                             </div>
@@ -404,7 +400,7 @@ function CountryCityPage() {
                                     </div>
                                     <div className="col">
                                         <div class="input-group mb-2 ">
-                                            <Button type="danger " className=' px-4 ' icon={GiCrossMark}>Clear</Button>
+                                            <Button type="danger " className=' px-4 ' onClick={() => window.location.reload()}>Clear</Button>
                                             <Button type="primary" className="mx-2">Submit</Button>
                                         </div>
                                     </div>
@@ -469,13 +465,13 @@ function CountryCityPage() {
                                                 style={{
                                                     width: '100%',
                                                 }}
-                                                options={countryListForFilter}
+                                                options={cityListActiveForFilter}
                                             />
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div class="input-group mb-2 ">
-                                            <Button type="danger " className=' px-4 ' icon={GiCrossMark}>Clear</Button>
+                                            <Button type="danger " className=' px-4 ' onClick={() => window.lo}>Clear</Button>
                                             <Button type="primary" className="mx-2">Submit</Button>
                                         </div>
                                     </div>
@@ -502,7 +498,68 @@ function CountryCityPage() {
                             </button>
                         </div>
                         <form onSubmit={handleSubmit(onSubmit)}>
-                            <div class="modal-body">
+                        <div class="modal-body">
+                                <div className="row">
+                                    <div className="col-md-12 col-lg-12 col-sm-12 d-flex">
+                                        <div className="col-md-4 col-lg-4 col-sm-12">
+                                            <label className="colorblack bold">Country Name</label>
+                                        </div>
+                                        <div className="col-md-8 col-lg-8 col-sm-12 mb-3">
+                                        <input className="form-control" name='country'  {...register("country", { required: true, maxLength: 20 })} />
+                                        </div>
+                                    </div>
+
+                                    <div className="col-md-12 col-lg-12 col-sm-12 d-flex mb-3">
+                                        <div className="col-md-4 col-lg-4 col-sm-12">
+                                            <label className="colorblack bold">Country Currency</label>
+                                        </div>
+                                        <div className="col-md-8 col-lg-8 col-sm-12">
+                                        <select className="form-control d-block w-100 pt-1" {...register("currency", { required: true })}>
+                                            <option value="USD">USD</option>
+                                            <option value="EUR">EUR</option>
+                                            <option value="GBP">GBP</option>
+                                            <option value="KRW">KRW</option>
+                                            <option value="EUR">EUR</option>
+                                            <option value="INR">INR</option>
+                                        </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="col-md-12 col-lg-12 col-sm-12 d-flex mb-3">
+                                        <div className="col-md-4 col-lg-4 col-sm-12">
+                                            <label className="colorblack bold">Country Image</label>
+                                        </div>
+                                        <div className="col-md-8 col-lg-8 col-sm-12">
+                                        <Upload
+                                            name="avatar"
+                                            listType="picture-card"
+                                            className="avatar-uploader"
+                                            showUploadList={false}
+                                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                            onChange={handleImgChange}
+                                        >
+                                            {img ? (
+                                                <img
+                                                    src={img}
+                                                    alt="avatar"
+                                                    style={{
+                                                        width: '100%',
+                                                    }}
+                                                />
+                                            ) : (
+                                                uploadButton
+                                            )}
+                                        </Upload>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div className="modal-footer" style={{ justifyContent: "center" }}>
+                                {/* <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> */}
+                                <button type="submit" class="btn btn-primary">Add Country</button>
+                            </div>
+                            {/* <div class="modal-body">
                                 <div className="row">
                                     <div className="col-md-6 col-lg-6 col-sm-12">
                                         <label className="colorblack bold">Country Name</label>
@@ -547,7 +604,7 @@ function CountryCityPage() {
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Add Country</button>
-                            </div>
+                            </div> */}
                         </form>
                     </div>
                 </div>
@@ -566,6 +623,65 @@ function CountryCityPage() {
                             </button>
                         </div>
                         <form onSubmit={handleCountryUpdateSubmit}>
+                            <div class="modal-body">
+                                <div className="row">
+                                    <div className="col-md-12 col-lg-12 col-sm-12 d-flex">
+                                        <div className="col-md-4 col-lg-4 col-sm-12">
+                                            <label className="colorblack bold">Country Name</label>
+                                        </div>
+                                        <div className="col-md-8 col-lg-8 col-sm-12 mb-3">
+                                            <input onChange={handelCountryupdatChange} className="form-control" name='country' defaultValue={countryId.country} />
+                                        </div>
+                                    </div>
+
+                                    <div className="col-md-12 col-lg-12 col-sm-12 d-flex mb-3">
+                                        <div className="col-md-4 col-lg-4 col-sm-12">
+                                            <label className="colorblack bold">Country Currency</label>
+                                        </div>
+                                        <div className="col-md-8 col-lg-8 col-sm-12">
+                                            <select onChange={handelCountryupdatChange} defaultValue={countryId.currency} className="form-control d-block w-100" name='currency'>
+                                                <option selected={countryId.currency == "USD" ? true : false} value="USD">USD</option>
+                                                <option selected={countryId.currency == "EUR" ? true : false} value="EUR">EUR</option>
+                                                <option selected={countryId.currency == "GBP" ? true : false} value="GBP">GBP</option>
+                                                <option selected={countryId.currency == "KRW" ? true : false} value="KRW">KRW</option>
+                                                <option selected={countryId.currency == "EUR" ? true : false} value="EUR">EUR</option>
+                                                <option selected={countryId.currency == "INR" ? true : false} value="INR">INR</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="col-md-12 col-lg-12 col-sm-12 d-flex mb-3">
+                                        <div className="col-md-4 col-lg-4 col-sm-12">
+                                            <label className="colorblack bold">Country Image</label>
+                                        </div>
+                                        <div className="col-md-8 col-lg-8 col-sm-12">
+                                            <Upload
+                                                name="avatar"
+                                                listType="picture-card"
+                                                className="avatar-uploader"
+                                                showUploadList={false}
+                                                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                                onChange={handleCountryUpdateImgChange}
+                                            >
+                                                <img
+                                                    src={coutryUpdate64Img || countryId.country_image}
+                                                    alt="avatar"
+                                                    style={{
+                                                        width: '100%',
+                                                    }}
+                                                />
+                                            </Upload>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div className="modal-footer" style={{ justifyContent: "center" }}>
+                                {/* <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> */}
+                                <button type="submit" class="btn btn-primary">Update Country</button>
+                            </div>
+
+                            {/*                             
                             <div class="modal-body">
                                 <div className="row">
                                     <div className="col-md-6 col-lg-6 col-sm-12">
@@ -606,7 +722,7 @@ function CountryCityPage() {
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Update Country</button>
-                            </div>
+                            </div> */}
                         </form>
                     </div>
                 </div>
@@ -623,7 +739,49 @@ function CountryCityPage() {
                             </button>
                         </div>
                         <form onSubmit={saveCityData}>
+
                             <div class="modal-body">
+                                <div className="row">
+                                    <div className="col-md-12 col-lg-12 col-sm-12 d-flex">
+                                        <div className="col-md-4 col-lg-4 col-sm-12">
+                                            <label className="colorblack bold">Country Name</label>
+                                        </div>
+                                        <div className="col-md-8 col-lg-8 col-sm-12 mb-3">
+                                            <select className="form-control" name='country_id' onChange={updateCityhandleChange} required>
+                                                <option value="">Select Country</option>
+                                                {countryList?.map(val => {
+                                                    return <option key={val.country_id} value={val.country_id}>{val.country}</option>
+                                                })}
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+                                    <div className="col-md-12 col-lg-12 col-sm-12 d-flex mb-3">
+                                        <div className="col-md-4 col-lg-4 col-sm-12">
+                                            <label className="colorblack bold">City</label>
+                                        </div>
+                                        <div className="col-md-8 col-lg-8 col-sm-12">
+                                            <input className="form-control" type="text" name="city" onChange={CityhandleChange} required />
+                                        </div>
+                                    </div>
+
+                                    <div className="col-md-12 col-lg-12 col-sm-12 d-flex mb-3">
+                                        <div className="col-md-4 col-lg-4 col-sm-12">
+                                            <label className="colorblack bold">Payable Tax</label>
+                                        </div>
+                                        <div className="col-md-8 col-lg-8 col-sm-12">
+                                            <input className="form-control" min='0' type="number" name="applicable_taxes" onChange={CityhandleChange} required />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div className="modal-footer" style={{ justifyContent: "center" }}>
+                                {/* <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> */}
+                                <button type="submit" class="btn btn-primary">Add City</button>
+                            </div>
+                            {/* <div class="modal-body">
                                 <div className="row">
                                     <div className="col-md-6 col-lg-6 col-sm-12">
                                         <label className="colorblack bold">Country Name</label>
@@ -643,12 +801,12 @@ function CountryCityPage() {
                                         <input className="form-control" min='0' type="number" name="applicable_taxes" onChange={CityhandleChange} required />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
-                            <div class="modal-footer">
-                                {/* <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> */}
+                            {/* <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Add City</button>
-                            </div>
+                            </div> */}
                         </form>
                     </div>
                 </div>
@@ -666,8 +824,52 @@ function CountryCityPage() {
                             </button>
                         </div>
                         <form onSubmit={saveCityUpdateData}>
+
                             <div class="modal-body">
                                 <div className="row">
+                                    <div className="col-md-12 col-lg-12 col-sm-12 d-flex">
+                                        <div className="col-md-4 col-lg-4 col-sm-12">
+                                            <label className="colorblack bold">Country Name</label>
+                                        </div>
+                                        <div className="col-md-8 col-lg-8 col-sm-12 mb-3">
+                                            <select className="form-control" name='country_id' onChange={updateCityhandleChange} required>
+                                                <option value="">Select Country</option>
+                                                {countryList?.map(val => {
+                                                    return <option selected={val.country == cityId.country} key={val.country_id} value={val.country_id}>{val.country}</option>
+                                                })}
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+                                    <div className="col-md-12 col-lg-12 col-sm-12 d-flex mb-3">
+                                        <div className="col-md-4 col-lg-4 col-sm-12">
+                                            <label className="colorblack bold">City</label>
+                                        </div>
+                                        <div className="col-md-8 col-lg-8 col-sm-12">
+                                            <input className="form-control" defaultValue={cityId.city} type="text" name="city" onChange={updateCityhandleChange} required />
+
+                                        </div>
+                                    </div>
+
+                                    <div className="col-md-12 col-lg-12 col-sm-12 d-flex mb-3">
+                                        <div className="col-md-4 col-lg-4 col-sm-12">
+                                            <label className="colorblack bold">Payable Tax</label>
+                                        </div>
+                                        <div className="col-md-8 col-lg-8 col-sm-12">
+                                            <input className="form-control" defaultValue={cityId.applicable_taxes} min='0' type="number" name="applicable_taxes" onChange={updateCityhandleChange} required />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div className="modal-footer" style={{ justifyContent: "center" }}>
+                                {/* <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> */}
+                                <button type="submit" class="btn btn-primary">Update City</button>
+                            </div>
+                            {/* <div class="modal-body">
+                                <div className="row">
+                                    
                                     <div className="col-md-6 col-lg-6 col-sm-12">
                                         <label className="colorblack bold">Country Name</label>
                                         <select className="form-control" name='country_id' onChange={updateCityhandleChange} required>
@@ -689,9 +891,9 @@ function CountryCityPage() {
                             </div>
 
                             <div class="modal-footer">
-                                {/* <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> */}
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Update City</button>
-                            </div>
+                            </div> */}
                         </form>
                     </div>
                 </div>

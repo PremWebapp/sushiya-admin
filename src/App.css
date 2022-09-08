@@ -103,3 +103,7 @@ label {
 .curcer{
   cursor: pointer;
 }
+.btn:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}

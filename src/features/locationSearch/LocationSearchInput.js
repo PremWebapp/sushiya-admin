@@ -43,8 +43,8 @@ export default function LocationSearchInput() {
               
 
                 {loading && <div>Loading...</div>}
-                {suggestions.map(suggestion => {
-                  const className = suggestion.active
+                {suggestions?.map(suggestion => {
+                  const className = suggestion?.active
                     ? 'suggestion-item--active'
                     : 'suggestion-item';
                   // inline style for demonstration purpose
@@ -58,7 +58,7 @@ export default function LocationSearchInput() {
                         style,
                       })}
                     >
-                      <p>{suggestion.description}</p>
+                      <p>{suggestion?.description}</p>
                     </div>
                   );
                 })}

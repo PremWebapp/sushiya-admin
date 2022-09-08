@@ -4,33 +4,55 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { Token, PathUrl } from '../../../config/Config'
 import Loader from "react-js-loader";
-import { Table, Switch, message } from 'antd'
+import { Table, Switch, message, Select, Button } from 'antd'
+import { useSelector, useDispatch } from "react-redux";
 
 import SimpleMap from '../../GoogleMap/SimpleMap';
 import Moment from 'react-moment';
 import LocationSearchInput from '../../locationSearch/LocationSearchInput';
+import { addRestaurant, fetchBranch, fetchRestaurant } from '../../../redux/reducers/restorentReducer';
+import { toast } from 'react-toastify';
+import { AudioOutlined } from '@ant-design/icons';
 
-const RestaurantPage = (props) => {
-
+const RestaurantPage = () => {
+    const dispatch = useDispatch()
+    const { userData: { token, user } } = useSelector(state => state.auth)
+    const { restoList, branchList, restroLoading } = useSelector(state => state.restaurant)
+    const { countryListForFilter, cityListForFilter, } = useSelector(state => state.countryAcity)
     // Token ,UserId and Url
-    const token = Token().token;
-    // const url = PathUrl().urlData.development;
-    const url = PathUrl().urlData.production;
-
+    // const token = Token().token;
+    // const url = PathUrl().urlData?.development;
+    const url = PathUrl().urlData?.production;
 
     const [loader, setloader] = useState(true)
     const [restaurantMap, setRestaurantMap] = useState(true);
-    const [restaurantList, setRestaurantList] = useState(false);
-    const [branchList, setBranchList] = useState(false);
+    const [restaurant, setRestaurant] = useState(false);
+    const [branch, setBranch] = useState(false);
 
     const [addList, setAddList] = useState(false);
     const [restaurantData, setRestaurantData] = useState([]);
     const [branchData, setBranchData] = useState([]);
 
+    const options = [
+        {
+            value: 'Last 7 Days',
+        },
+        {
+            value: 'Last Month',
+        },
+        {
+            value: 'Last 6 Month',
+        },
+    ];
 
     useEffect(() => {
-        loadRestroList()
-        loadBranchList()
+        // loadRestroList()
+        // loadBranch()
+        $("#restMap").css("background-color", "#fc6011")
+        $("#restMap").css("color", "white")
+
+        dispatch(fetchRestaurant({ token }))
+        dispatch(fetchBranch({ token }))
     }, [])
 
 
@@ -57,7 +79,7 @@ const RestaurantPage = (props) => {
             dataIndex: 'id',
             key: 'id',
             sorter: {
-                compare: (a, b) => a.id - b.id,
+                compare: (a, b) => a?.id - b?.id,
                 multiple: 3,
             },
         },
@@ -65,13 +87,83 @@ const RestaurantPage = (props) => {
             title: 'Restro Name',
             dataIndex: 'name',
             key: 'name',
+        },
+        {
+            title: 'Email',
+            dataIndex: 'city_detail',
+            key: 'city',
+            // render: city_detail => `${city_detail?.city}`
+        },
+        {
+            title: 'Number',
+            dataIndex: 'created_at',
+            key: 'added_on',
             sorter: {
-                compare: (a, b) => a.name - b.name,
+                compare: (a, b) => a?.created_at - b?.created_at,
+                multiple: 3,
+            },
+        
+        },
+        {
+            title: 'Join Date',
+            dataIndex: 'email',
+            key: 'email',
+            sorter: {
+                compare: (a, b) => a?.created_at - b?.created_at,
+                multiple: 3,
+            },
+            render: (text, record) => (
+                <span>{(record?.created_at && <Moment format="YYYY/MM/DD">
+                    {record?.created_at}
+                </Moment>)}</span>
+            )
+        },
+        {
+            title: 'Country',
+            dataIndex: 'email',
+            key: 'email',
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            sorter: {
+                compare: (a, b) => a?.status - b?.status,
+                multiple: 2,
+            },
+            render: (text, record) => <span>{record?.approve == '0' ? <span><i className='fa fa-check' id={record?.id} onClick={approve} style={{ color: 'red', marginRight: '1rem', cursor: 'pointer' }}></i> <i className='fa fa-times' style={{ cursor: 'pointer' }} id={record?.id} onClick={reject} ></i></span> : (record?.approve == '1' ? 'Approved' : 'rejected')}</span>
+        },
+
+        {
+            title: 'Action',
+            dataIndex: 'id',
+            key: 'timing',
+            render: (text, record) => <span>{(record?.approve == '0' ? 'Pending' : (record?.approve == '1' ? <Switch defaultChecked onClick={((event) => SwitchReject(event, record?.id))} /> : <Switch onClick={((event) => SwitchApprove(event, record?.id))} />))}</span>,
+
+        },
+    ];
+
+    const branchColumn = [
+        {
+            title: 'Id',
+            dataIndex: 'id',
+            key: 'id',
+            sorter: {
+                compare: (a, b) => a?.id - b?.id,
                 multiple: 3,
             },
         },
         {
-            title: 'City',
+            title: 'Branch Name',
+            dataIndex: 'name',
+            key: 'name',
+            sorter: {
+                compare: (a, b) => a?.name - b?.name,
+                multiple: 3,
+            },
+        },
+        {
+            title: 'Email',
             dataIndex: 'city_detail',
             key: 'city',
             sorter: {
@@ -81,21 +173,26 @@ const RestaurantPage = (props) => {
             render: city_detail => `${city_detail?.city}`
         },
         {
-            title: 'Added On',
+            title: 'Number',
             dataIndex: 'created_at',
             key: 'added_on',
             sorter: {
-                compare: (a, b) => a.created_at - b.created_at,
+                compare: (a, b) => a?.created_at - b?.created_at,
                 multiple: 3,
             },
             render: (text, record) => (
-                <span>{(record.created_at && <Moment format="YYYY/MM/DD">
-                    {record.created_at}
+                <span>{(record?.created_at && <Moment format="YYYY/MM/DD">
+                    {record?.created_at}
                 </Moment>)}</span>
             )
         },
         {
-            title: 'Email',
+            title: 'Join Date',
+            dataIndex: 'email',
+            key: 'email',
+        },
+        {
+            title: 'Country',
             dataIndex: 'email',
             key: 'email',
         },
@@ -104,21 +201,20 @@ const RestaurantPage = (props) => {
             dataIndex: 'status',
             key: 'status',
             sorter: {
-                compare: (a, b) => a.status - b.status,
+                compare: (a, b) => a?.status - b?.status,
                 multiple: 2,
             },
-            render: (text, record) => <span>{record.approve == '0' ? <span><i className='fa fa-check' id={record.id} onClick={approve} style={{ color: 'red', marginRight: '1rem', cursor: 'pointer' }}></i> <i className='fa fa-times' style={{ cursor: 'pointer' }} id={record.id} onClick={reject} ></i></span> : (record.approve == '1' ? 'Approved' : 'rejected')}</span>
+            render: (text, record) => <span>{record?.approve == '0' ? <span><i className='fa fa-check' id={record?.id} onClick={approve} style={{ color: 'red', marginRight: '1rem', cursor: 'pointer' }}></i> <i className='fa fa-times' style={{ cursor: 'pointer' }} id={record?.id} onClick={reject} ></i></span> : (record?.approve == '1' ? 'Approved' : 'rejected')}</span>
         },
 
         {
             title: 'Action',
             dataIndex: 'id',
             key: 'timing',
-            render: (text, record) => <span>{(record.approve == '0' ? 'Pending' : (record.approve == '1' ? <Switch defaultChecked onClick={((event) => SwitchReject(event, record.id))} /> : <Switch onClick={((event) => SwitchApprove(event, record.id))} />))}</span>,
+            render: (text, record) => <span>{(record?.approve == '0' ? 'Pending' : (record?.approve == '1' ? <Switch defaultChecked onClick={((event) => SwitchReject(event, record?.id))} /> : <Switch onClick={((event) => SwitchApprove(event, record?.id))} />))}</span>,
 
         },
     ];
-
     // For Restaurant Approve 
     const approve = (e) => {
         ChangeRestaurantStatus(true, e.target.id)
@@ -145,14 +241,14 @@ const RestaurantPage = (props) => {
         axios.post(`${url}/UpdateRestaurantStatus`, { value: value1, id: id1 }, { headers: { Authorization: 'Bearer ' + token } })
             .then((response) => {
                 loadRestroList()
-                message.success(`Status of ${response.data.name} has been Changed..!`)
+                message.success(`Status of ${response.data?.name} has been Changed..!`)
             })
             .catch((response) => {
                 console.log(response.error)
             });
     }
 
-    
+
 
 
     // For Branch Approve 
@@ -178,21 +274,20 @@ const RestaurantPage = (props) => {
         alert(id1)
         axios.post(`${url}/BranchStatus`, { value: value1, id: id1 }, { headers: { Authorization: 'Bearer ' + token } })
             .then((response) => {
-                loadBranchList()
-                message.success(`Status of ${response.data.name} has been Changed..!`)
+                loadBranch()
+                message.success(`Status of ${response.data?.name} has been Changed..!`)
             })
             .catch((response) => {
                 console.log(response.error)
             });
     }
 
-
     // For Branch List 
-    const loadBranchList = () => {
+    const loadBranch = () => {
 
-        axios.get(`${url}/AdminBranchList`, { headers: { Authorization: 'Bearer ' + token } })
+        axios.get(`${url}/AdminBranch`, { headers: { Authorization: 'Bearer ' + token } })
             .then((response) => {
-                console.log(response.data,"branch data");
+                console.log(response.data, "branch data");
                 setBranchData(response.data)
             })
             .catch((error) => {
@@ -200,128 +295,44 @@ const RestaurantPage = (props) => {
             });
     }
 
-    const DataType = (e) => {
-
-        if (e.target.value === 'restaurant') {
-            setRestaurantList(true);
-            setBranchList(false);
+    const dataType = (event, v) => {
+        console.log('event', event)
+        if (event === 'Restaurant') {
+            setRestaurant(true);
+            setBranch(false);
         }
-        if (e.target.value === 'branch') {
-            setRestaurantList(false);
-            setBranchList(true);
+        if (event === 'Branch') {
+            setRestaurant(false);
+            setBranch(true);
         }
     }
-
-    // For Branch Data Colum
-
-    const branchColumn = [
-        {
-            title: 'Id',
-            dataIndex: 'branch_id',
-            key: 'branch_id',
-            sorter: {
-                compare: (a, b) => a.branch_id - b.branch_id,
-                multiple: 3,
-            },
-        },
-        {
-            title: 'Branch Name',
-            dataIndex: 'branch_name',
-            key: 'branch_name',
-            sorter: {
-                compare: (a, b) => a.branch_name - b.branch_name,
-                multiple: 3,
-            },
-        },
-        {
-            title: 'Restaurant Name',
-            dataIndex: 'restaurant_detail',
-            key: 'Restaurant',
-            sorter: {
-                compare: (a, b) => a.restaurant_detail - b.restaurant_detail,
-                multiple: 3,
-            },
-            render: restaurant_detail => `${restaurant_detail.name}`
-        },
-        {
-            title: 'Country',
-            dataIndex: 'country',
-            key: 'country',
-            sorter: {
-                compare: (a, b) => a.country - b.country,
-                multiple: 3,
-            },
-        },
-        {
-            title: 'City',
-            dataIndex: 'city',
-            key: 'city',
-            sorter: {
-                compare: (a, b) => a.city - b.city,
-                multiple: 3,
-            },
-        },
-        {
-            title: 'Timing',
-            dataIndex: 'start_time  end_time',
-            key: 'timing',
-            render: (text, record) => (
-                <span>{(record.start_time && <span> {record.start_time}am To {record.end_time}pm </span>)}</span>
-            )
-
-        },
-        {
-            title: 'Added On',
-            dataIndex: 'created_at',
-            key: 'added_on',
-            sorter: {
-                compare: (a, b) => a.created_at - b.created_at,
-                multiple: 3,
-            },
-            render: (text, record) => (
-                <span>{(record.created_at && <Moment format="YYYY/MM/DD">
-                    {record.created_at}
-                </Moment>)}</span>
-            )
-        },
-        {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-            sorter: {
-                compare: (a, b) => a.status - b.status,
-                multiple: 2,
-            },
-            render: (text, record) => <span>{record.approve == '0' ? <span><i className='fa fa-check' id={record.id} onClick={approveBranch} style={{ color: 'red', marginRight: '1rem', cursor: 'pointer' }}></i> <i className='fa fa-times' style={{ cursor: 'pointer' }} id={record.id} onClick={rejectBranch} ></i></span> : (record.approve == '1' ? 'Approved' : 'rejected')}</span>
-        },
-
-        {
-            title: 'Action',
-            dataIndex: 'id',
-            key: 'timing',
-            render: (text, record) => <span>{(record.approve == '0' ? 'Pending' : (record.approve == '1' ? <Switch defaultChecked onClick={((event) => SwitchBranchReject(event, record.id))} /> : <Switch onClick={((event) => SwitchBranchApprove(event, record.id))} />))}</span>,
-
-        },
-    ];
-
 
     // For Open List Component
     const openList = (e) => {
         setRestaurantMap(false);
-        setRestaurantList(true);
-        setBranchList(false);
+        setRestaurant(true);
+        setBranch(false);
         setAddList(true);
         e.target.classList.add('active');
+
+        $("#restMap").css("background-color", "#fff");
+        $("#restMap").css("color", "#858796");
+        $("#restList").css("background-color", "#fc6011",);
+        $("#restList").css("color", "#fff");
         $('#restMap').removeClass('active');
     }
 
     // For Open Map Component 
-
     const openMap = (e) => {
         setRestaurantMap(true);
-        setRestaurantList(false);
-        setBranchList(false);
+        setRestaurant(false);
+        setBranch(false);
         e.target.classList.add('active');
+
+        $("#restList").css("background-color", "#fff");
+        $("#restList").css("color", "#858796");
+        $("#restMap").css("background-color", "#fc6011",);
+        $("#restMap").css("color", "#fff");
         $('#restList').removeClass('active');
     }
 
@@ -329,97 +340,186 @@ const RestaurantPage = (props) => {
     const { register, handleSubmit } = useForm();
 
     const onSubmit = data => {
+
         let dd = new FormData();
 
-        dd.append('name', data.name);
-        dd.append('email', data.email);
-        dd.append('mobile', data.mobile);
-        dd.append('password', data.password);
+        dd.append('name', data?.name);
+        dd.append('email', data?.email);
+        dd.append('mobile', data?.mobile);
+        dd.append('password', data?.password);
 
+        dispatch(addRestaurant({ data, token }))
+
+        setTimeout(() => {
+            dispatch(fetchRestaurant({ token }))
+        }, 2000)
         // Send a POST request
+        // axios.post(`${url}/restaurant`, dd, { headers: { Authorization: 'Bearer ' + token } })
+        //     .then((response) => {
 
-        axios.post(`${url}/restaurant`, dd, { headers: { Authorization: 'Bearer ' + token } })
-            .then((response) => {
-
-                $('#form-btn').trigger('click');
-                $('#CountryModal form :input').val("");
-                message.success('Restaurant Created Successfully..!!');
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-
+        //         $('#form-btn').trigger('click');
+        //         $('#CountryModal form :input').val("");
+        //         message.success('Restaurant Created Successfully..!!');
+        //     })
+        //     .catch((error) => {
+        //         console.error(error);
+        //     });
     };
+
+    const typeList = [
+        {
+            value: 'Restaurant',
+        },
+        {
+            value: 'Branch',
+        },
+    ]
+    const restroTypeList = [
+        {
+            value: 'All',
+            name:'1'
+        },
+        {
+            value: 'New',
+            name:'2'
+        },
+        {
+            value: 'Pending',
+            name:'3'
+        },
+        {
+            value: 'Approved',
+            name:'4'
+        },
+    ]
+
+    
     return (
         <>
             <div class="row">
 
                 <div class="col-lg-12">
 
-                    <div class="card mb-4">
+                    <div class="card">
 
                         <div class="card-body">
-                            <h3 className="ml-5 colorblack bold">Restaurant Management</h3>
+                            <h4 className="ml-5 colorblack bold">Restaurant Management</h4>
                             <div className="mt-4 text-center">
                                 <div class="btn-group" style={{ minWidth: '50%' }}>
-                                    <button type="button" class="btn btn-outline-warning active" id="restMap" onClick={openMap}>Map View</button>
-                                    <button type="button" class="btn btn-outline-warning" onClick={openList} id="restList">List View</button>
+                                    <button type="button" class="btn active border" id="restMap" onClick={openMap}>Map View</button>
+                                    <button type="button" class="btn border" onClick={openList} id="restList">List View</button>
 
                                 </div>
-                                <div className="col-md-12 col-lg-12 col-sm-12" style={{ float: 'right' }}>
-                                    &nbsp;&nbsp;
-                                    {
-                                        addList && (<button type="button" class="btn btn-outline-dark" style={{ minWidth: '20%', float: 'right' }} data-toggle="modal" data-target="#CountryModal">Add</button>)
-                                    }
-                                </div>
+                                {/* <div className="col-md-12 col-lg-12 col-sm-12" style={{ float: 'right' }}> */}
+                                &nbsp;&nbsp;
+                                {
+                                    // addList && (<button type="button" class="btn btn-outline-dark" style={{ minWidth: '20%', float: 'right' }} data-toggle="modal" data-target="#CountryModal">Add</button>)
+                                    addList && (<Button  type='primary' size="medium" style={{ minWidth: '10%', float: 'right' }} data-toggle="modal" data-target="#CountryModal">Add</Button>)
+                                }
+                                {/* </div> */}
 
                             </div>
                         </div>
                     </div>
-
-
                 </div>
-
-
-
             </div>
+
             <div className="container-fluid">
                 <div className="row">
-                    {
+                    {/* {
                         restaurantMap && (<SimpleMap />)
-                    }
+                    } */}
 
-                    {
-                        restaurantList && (<div className="col-md-12 col-lg-12 col-sm-12">
-                            <div className="row mb-4">
-                                <div className="col-md-4 col-lg-4 col-sm-12">
+                    {/* {
+                        restaurant && ( */}
+                        <div className="col-md-12 col-lg-12 col-sm-12">
+                         {!restaurantMap &&<div className="row  row-cols-auto py-4 bg-white border rounded my-4">
+                                <div className="col">
                                     <div class="input-group mb-3">
                                         <span class="input-group-text " id="basic-addon1"><i className="fa fa-search"></i></span>
-                                        <input type="text" class="form-control" placeholder="Search By City or Country" aria-label="Username" aria-describedby="basic-addon1" />
+                                        <Select
+                                            mode="multiple"
+                                            allowClear
+                                            placeholder="Search By Name"
+                                            showArrow
+                                            style={{
+                                                width: '75%',
+                                            }}
+                                            options={options}
+                                        />
+                                        {/* <input type="text" class="form-control" placeholder="Search By City or Country" aria-label="Username" aria-describedby="basic-addon1" /> */}
                                     </div>
                                 </div>
-                                <div className="col-md-4 col-lg-4 col-sm-12">
-                                    <select className="form-control">
-                                        <option>Last 7 Days</option>
-                                        <option>Last Month</option>
-                                        <option>Last 6 Months</option>
-
-                                    </select>
+                                <div className="col">
+                                    <Select
+                                        mode="single"
+                                        allowClear
+                                        placeholder="Search By Duration"
+                                        showArrow
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                        options={options}
+                                    />
                                 </div>
-                                <div className="col-md-4 col-lg-4 col-sm-12">
-                                    <select className="form-control" onChange={DataType}>
-                                        <option value="restaurant" selected>Restaurant</option>
-                                        <option value="branch">Branch</option>
-
-                                    </select>
+                                <div className="col">
+                                    <Select
+                                        mode="single"
+                                        allowClear
+                                        placeholder="Search By Country"
+                                        showArrow
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                        options={countryListForFilter}
+                                    />
                                 </div>
-
-                                <div className="col-md-8 col-lg-8 col-sm-12">
-                                    <LocationSearchInput />
+                                <div className="col">
+                                    <Select
+                                        mode="single"
+                                        allowClear
+                                        placeholder="Search By City"
+                                        showArrow
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                        options={cityListForFilter}
+                                    />
                                 </div>
-                            </div>
+                                <div className="col">
+                                    <Select
+                                        mode="single"
+                                        // placeholder="Search By City"
+                                        defaultValue={['Restaurant']}
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                        options={typeList}
+                                        onChange={dataType}
+                                    />
+                                    {/* </select> */}
+                                </div>
+                                <div className="col">
+                                    <Select
+                                        mode="single"
+                                        defaultValue={['All']}
+                                        style={{
+                                            width: '100%',
+                                        }}
+                                        options={restroTypeList}
+                                        // onChange={dataType}
+                                    />
+                                    {/* </select> */}
+                                </div>
+                                <div className="col">
+                                    <div class="input-group mb-2 ">
+                                        <Button type="danger " className=' px-4 ' onClick={() => window.location.reload()}>Clear</Button>
+                                        <Button type="primary" className="mx-2">Submit</Button>
+                                    </div>
+                                </div>
+                            </div>}
 
-
+                            {/* 
                             {
                                 loader && (
                                     <tr>
@@ -439,44 +539,94 @@ const RestaurantPage = (props) => {
                                     </tr>
 
                                 )
-                            }
-                            {
-                                restaurantData && (
-                                    <Table dataSource={restaurantData} columns={restroColumn} pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['05', '10', '20', '30'] }} />
-                                )
-                            }
+                            } */}
+                               {restaurant && (
+                                    <Table loading={restroLoading} dataSource={restoList} columns={restroColumn} pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['05', '10', '20', '30'] }} />
+                                )}
 
-                        </div>)
-                    }
+                        </div>
+                        {/* ) */}
+                    {/* } */}
 
                     {
-                        branchList && (
+                        branch && (
                             <div className="col-md-12 col-lg-12 col-sm-12">
-                                <div className="row mb-4">
-                                    <div className="col-md-4 col-lg-4 col-sm-12">
+
+                                {/* <div className="row row-cols-1 row-cols-sm-6 row-cols-md-6 row-cols-lg-6  py-4 bg-white border rounded my-4">
+                                    <div className="col">
                                         <div class="input-group mb-3">
                                             <span class="input-group-text " id="basic-addon1"><i className="fa fa-search"></i></span>
-                                            <input type="text" class="form-control" placeholder="Search By City or Country" aria-label="Username" aria-describedby="basic-addon1" />
+                                            <Select
+                                                mode="multiple"
+                                                allowClear
+                                                placeholder="Search By Name"
+                                                showArrow
+                                                style={{
+                                                    width: '80%',
+                                                }}
+                                                options={options}
+                                            />
                                         </div>
                                     </div>
-                                    <div className="col-md-4 col-lg-4 col-sm-12">
-                                        <select className="form-control">
-                                            <option>Last 7 Days</option>
-                                            <option>Last Month</option>
-                                            <option>Last 6 Months</option>
-
-                                        </select>
+                                    <div className="col">
+                                        <Select
+                                            mode="single"
+                                            allowClear
+                                            placeholder="Search By Duration"
+                                            showArrow
+                                            style={{
+                                                width: '100%',
+                                            }}
+                                            options={options}
+                                        />
                                     </div>
-                                    <div className="col-md-4 col-lg-4 col-sm-12">
-                                        <select className="form-control" onChange={DataType}>
-                                            <option value="restaurant" >Restaurant</option>
-                                            <option value="branch" selected>Branch</option>
+                                    <div className="col">
+                                        <Select
+                                            mode="single"
+                                            allowClear
+                                            placeholder="Search By Country"
+                                            showArrow
+                                            style={{
+                                                width: '100%',
+                                            }}
+                                            options={countryListForFilter}
+                                        />
 
-                                        </select>
                                     </div>
-                                </div>
+                                    <div className="col">
+                                        <Select
+                                            mode="single"
+                                            allowClear
+                                            placeholder="Search By City"
+                                            showArrow
+                                            style={{
+                                                width: '100%',
+                                            }}
+                                            options={cityListForFilter}
+                                        />
+                                    </div>
+                                    <div className="col">
 
-                                <Table dataSource={branchData} columns={branchColumn} pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['05', '10', '20', '30'] }} />
+                                        <Select
+                                            mode="single"
+                                            defaultValue={['Restaurant']}
+                                            style={{
+                                                width: '100%',
+                                            }}
+                                            options={typeList}
+                                            onChange={dataType}
+                                        />
+                                    </div>
+
+                                    <div className="col">
+                                        <div class="input-group mb-2 ">
+                                            <Button type="danger " className=' px-4 ' onClick={() => window.location.reload()}>Clear</Button>
+                                            <Button type="primary" className="mx-2">Submit</Button>
+                                        </div>
+                                    </div>
+                                </div> */}
+
+                                <Table dataSource={branchList} columns={branchColumn} pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['05', '10', '20', '30'] }} />
                             </div>
                         )
 
@@ -522,7 +672,7 @@ const RestaurantPage = (props) => {
                                             <label className="colorblack bold">Mobile Number</label>
                                         </div>
                                         <div className="col-md-8 col-lg-8 col-sm-12">
-                                            <input {...register("mobile", { required: true, maxLength: 10 })} className="form-control" />
+                                            <input type="number"  {...register("mobile", { required: true, maxLength: 10, })} className="form-control" />
                                             <small>(Max-Length 10 Character)</small>
                                         </div>
                                     </div>

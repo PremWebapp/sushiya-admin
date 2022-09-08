@@ -5,17 +5,17 @@ import { persistReducer, persistStore } from 'redux-persist';
 import thunk from 'redux-thunk';
 import authReducer from "./reducers/authReducer";
 import countryCityReducer from "./reducers/country&cityReducer";
+import restorentReducer from "./reducers/restorentReducer";
 
 const persistConfig = {
     key: "sushiya",
     storage,
-    whitelist: ['auth'],
-    blacklist: ['countryAcity'],
 }
 
 const combinedReducer = combineReducers({
     auth: authReducer,
-    countryAcity: countryCityReducer
+    countryAcity: countryCityReducer,
+    restaurant: restorentReducer,
 });
 const rootReducer = (state, action) => {
     if (action.type === 'auth/logout') {
