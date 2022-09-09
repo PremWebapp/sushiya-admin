@@ -285,8 +285,6 @@ function DishPage() {
     },
   ];
 
-
-
   // Approve Ingredient 
 
   const ApproveIngredient = (event) => {
@@ -321,7 +319,7 @@ function DishPage() {
   return (
     <>
       <div className="card-container">
-        <h3 className="ml-5 colorblack bold mt-3">Dish Management</h3>
+        <h4 className="ml-5 colorblack bold mt-3">Dish Management</h4>
         <Tabs type="card" centered >
           <TabPane tab="Dish" key="1" >
             <div className="container-fluid mt-3">

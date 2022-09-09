@@ -385,7 +385,7 @@ function CategoryPage() {
                     <div class="card mb-4">
 
                         <div class="card-body">
-                            <h3 className="ml-5 colorblack bold">Category Management</h3>
+                            <h4 className="ml-5 colorblack bold">Category Management</h4>
                             <div className="mt-4 text-center">
                                 <div class="btn-group" style={{ minWidth: '50%' }}>
                                     <button type="button" class="btn border rounded-0 active" id="country" onClick={openMenu}>Menu Type</button>

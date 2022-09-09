@@ -31,7 +31,7 @@ const PathUrl =() => {
 }
 const baseUrl = {
     development: 'http://localhost:8000/api',
-    production: 'http://52.91.235.134/api',
+    production: 'https://shushiya.webapp.world/api',
 }
 
 export { Token, UserId, PathUrl,baseUrl }

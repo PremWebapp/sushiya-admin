@@ -21,6 +21,7 @@ const RestaurantPage = () => {
     const { userData: { token, user } } = useSelector(state => state.auth)
     const { restoList, branchList, restroLoading } = useSelector(state => state.restaurant)
     const { countryListForFilter, cityListForFilter, } = useSelector(state => state.countryAcity)
+    console.log('restoList', restoList)
     // Token ,UserId and Url
     // const token = Token().token;
     // const url = PathUrl().urlData?.development;
@@ -92,14 +93,14 @@ const RestaurantPage = () => {
         },
         {
             title: 'Email',
-            dataIndex: 'city_detail',
-            key: 'city',
+            dataIndex: 'email',
+            key: 'email',
             // render: city_detail => `${city_detail?.city}`
         },
         {
             title: 'Number',
-            dataIndex: 'created_at',
-            key: 'added_on',
+            dataIndex: 'mobile',
+            key: 'mobile',
             sorter: {
                 compare: (a, b) => a?.created_at - b?.created_at,
                 multiple: 3,
@@ -108,8 +109,8 @@ const RestaurantPage = () => {
         },
         {
             title: 'Join Date',
-            dataIndex: 'email',
-            key: 'email',
+            dataIndex: 'created_at',
+            key: 'created_at',
             sorter: {
                 compare: (a, b) => a?.created_at - b?.created_at,
                 multiple: 3,
@@ -122,8 +123,8 @@ const RestaurantPage = () => {
         },
         {
             title: 'Country',
-            dataIndex: 'email',
-            key: 'email',
+            dataIndex: 'country',
+            key: 'country',
         },
         {
             title: 'Status',
@@ -138,8 +139,8 @@ const RestaurantPage = () => {
 
         {
             title: 'Action',
-            dataIndex: 'id',
-            key: 'timing',
+            dataIndex: '',
+            key: '',
             render: (text, record) => <span>{(record?.approve == '0' ? 'Pending' : (record?.approve == '1' ? <Switch defaultChecked onClick={((event) => SwitchReject(event, record?.id))} /> : <Switch onClick={((event) => SwitchApprove(event, record?.id))} />))}</span>,
 
         },

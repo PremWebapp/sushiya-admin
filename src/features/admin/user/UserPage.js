@@ -197,7 +197,7 @@ function UserPage() {
                     <div class="card mb-4">
 
                         <div class="card-body">
-                            <h3 className="ml-5 colorblack bold">User Management</h3>
+                            <h4 className="ml-5 colorblack bold">User Management</h4>
                             <div className="mt-4 text-center">
                                 <div class="btn-group" style={{ minWidth: '50%' }}>
                                     <button type="button" class="btn border active rounded-0" id="restMap" onClick={openMap}>Map View</button>

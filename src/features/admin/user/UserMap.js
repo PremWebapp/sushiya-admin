@@ -1,9 +1,10 @@
 import React, { useState, useEffect,useCallback, memo } from 'react';
-import { GoogleMap,Circle ,Marker , useJsApiLoader, LoadScript  } from '@react-google-maps/api';
+import { GoogleMap,Circle ,Marker , useJsApiLoader  } from '@react-google-maps/api';
+import restroIcon from '../../../img/restroIcon.png'
 
 const UserMap=()=> {
     const [map, setMap] = useState(null)
-    const [zoom, setZoom] = useState(20)
+    const [zoom, setZoom] = useState(10)
 
 
     setTimeout(()=>{
@@ -86,7 +87,7 @@ const UserMap=()=> {
                 />
             ))}
              {marker.map((mark, index) => (
-                <Marker position={mark} />
+                <Marker position={mark} icon={restroIcon}  />
                 ))}
                 { /* Child components, such as markers, info windows, etc. */}
                 <></>
