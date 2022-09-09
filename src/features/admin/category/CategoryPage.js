@@ -4,7 +4,7 @@ import $ from 'jquery'
 import { useForm } from 'react-hook-form';
 import DemoImage from '../../../img/demoImage.png'
 import { Token, PathUrl } from '../../../config/Config';
-import { message } from 'antd';
+import { message, Button } from 'antd';
 import { Table} from 'antd'
 
 
@@ -35,6 +35,8 @@ function CategoryPage() {
     useEffect(() => {
         MenuList()
         CategoryList()
+        $("#country").css("background-color", "#fc6011");
+        $("#country").css("color", "white");
     }, [])
 
     // For Category Form Data 
@@ -254,6 +256,12 @@ function CategoryPage() {
         setMenu(false);
         setCategory(true);
         e.target.classList.add('active');
+      
+
+        $("#country").css("background-color", "#fff");
+        $("#country").css("color", "#858796");
+        $("#city").css("background-color", "#fc6011",);
+        $("#city").css("color", "#fff");
         $('#country').removeClass('active');
     }
 
@@ -262,6 +270,10 @@ function CategoryPage() {
         setMenu(true);
         setCategory(false);
         e.target.classList.add('active');
+        $("#city").css("background-color", "#fff");
+        $("#city").css("color", "#858796");
+        $("#country").css("background-color", "#fc6011");
+        $("#country").css("color", "#fff");
         $('#city').removeClass('active');
     }
 
@@ -376,16 +388,19 @@ function CategoryPage() {
                             <h3 className="ml-5 colorblack bold">Category Management</h3>
                             <div className="mt-4 text-center">
                                 <div class="btn-group" style={{ minWidth: '50%' }}>
-                                    <button type="button" class="btn btn-outline-warning active" id="country" onClick={openMenu}>Menu Type</button>
-                                    <button type="button" class="btn btn-outline-warning" onClick={openCategory} id="city">Category</button>
+                                    <button type="button" class="btn border rounded-0 active" id="country" onClick={openMenu}>Menu Type</button>
+                                    <button type="button" class="btn border rounded-0" onClick={openCategory} id="city">Category</button>
 
                                 </div>
                                 &nbsp;&nbsp;
                                 {
-                                    menu && (<button type="button" class="btn btn-outline-dark" style={{ minWidth: '20%', float: 'right' }} data-toggle="modal" data-target="#menuModal">Add</button>)
+                                    menu && (<Button type='primary' size="medium"  style={{ minWidth: '10%', float: 'right' }} data-toggle="modal" data-target="#menuModal">Add</Button>)
+
+                                    // menu && (<button type="button" class="btn btn-outline-dark" style={{ minWidth: '20%', float: 'right' }} data-toggle="modal" data-target="#menuModal">Add</button>)
                                 }
                                 {
-                                    category && (<button type="button" class="btn btn-outline-dark" style={{ minWidth: '20%', float: 'right' }} data-toggle="modal" data-target="#CategoryModal">Add</button>)
+                                    category && (<Button type='primary' size="medium"  style={{ minWidth: '10%', float: 'right' }} data-toggle="modal" data-target="#CategoryModal">Add</Button>)
+                                    // category && (<button type="button" class="btn btn-outline-dark" style={{ minWidth: '20%', float: 'right' }} data-toggle="modal" data-target="#CategoryModal">Add</button>)
                                 }
 
                             </div>

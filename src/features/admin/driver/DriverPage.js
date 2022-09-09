@@ -6,6 +6,7 @@ import {Token,PathUrl} from '../../../config/Config';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 import Moment from 'react-moment';
+import UserMap from '../user/UserMap';
 
 
 
@@ -22,6 +23,8 @@ function DriverPage() {
 
   useEffect(() => {
     loadDriverList()
+    $("#driverMap").css("background-color", "#fc6011");
+    $("#driverMap").css("color", "#fff");
 }, [])
   // For Driver Data Colum
 
@@ -149,6 +152,12 @@ function DriverPage() {
     setDriverMap(false)
 
     e.target.classList.add('active');
+    // $('#driverMap').removeClass('active');
+
+    $("#driverMap").css("background-color", "#fff");
+    $("#driverMap").css("color", "#858796");
+    $("#driverList").css("background-color", "#fc6011",);
+    $("#driverList").css("color", "#fff");
     $('#driverMap').removeClass('active');
   }
 
@@ -159,6 +168,12 @@ function DriverPage() {
     setDriverMap(true)
 
     e.target.classList.add('active');
+    // $('#driverList').removeClass('active');
+
+    $("#driverList").css("background-color", "#fff");
+    $("#driverList").css("color", "#858796");
+    $("#driverMap").css("background-color", "#fc6011");
+    $("#driverMap").css("color", "#fff");
     $('#driverList').removeClass('active');
   }
 
@@ -174,8 +189,8 @@ function DriverPage() {
               <h3 className="ml-5 colorblack bold">Driver Management</h3>
               <div className="mt-4 text-center">
                 <div class="btn-group" style={{ minWidth: '50%' }}>
-                  <button type="button" class="btn btn-outline-warning active" id="driverMap" onClick={openMap}>Map View</button>
-                  <button type="button" class="btn btn-outline-warning" onClick={openList} id="driverList">List View</button>
+                  <button type="button" class="btn border rounded-0 active" id="driverMap" onClick={openMap}>Map View</button>
+                  <button type="button" class="btn border rounded-0" onClick={openList} id="driverList">List View</button>
                 </div>
 
               </div>
@@ -191,7 +206,7 @@ function DriverPage() {
       <div className="container-fluid">
         <div className="row">
           {
-            driverMap && (<SimpleMap />)
+            driverMap && (<UserMap />)
           }
           {
             driverList && (

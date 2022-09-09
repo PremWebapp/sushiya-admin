@@ -13,6 +13,8 @@ import LocationSearchInput from '../../locationSearch/LocationSearchInput';
 import { addRestaurant, fetchBranch, fetchRestaurant } from '../../../redux/reducers/restorentReducer';
 import { toast } from 'react-toastify';
 import { AudioOutlined } from '@ant-design/icons';
+import { cityFetchData } from '../../../redux/reducers/country&cityReducer';
+import UserMap from '../user/UserMap';
 
 const RestaurantPage = () => {
     const dispatch = useDispatch()
@@ -51,8 +53,8 @@ const RestaurantPage = () => {
         $("#restMap").css("background-color", "#fc6011")
         $("#restMap").css("color", "white")
 
-        dispatch(fetchRestaurant({ token }))
-        dispatch(fetchBranch({ token }))
+        dispatch(fetchRestaurant({type:'All', token }))
+        dispatch(fetchBranch({type:'All', token }))
     }, [])
 
 
@@ -377,22 +379,23 @@ const RestaurantPage = () => {
     const restroTypeList = [
         {
             value: 'All',
-            name:'1'
         },
         {
             value: 'New',
-            name:'2'
         },
         {
             value: 'Pending',
-            name:'3'
         },
         {
             value: 'Approved',
-            name:'4'
         },
     ]
 
+    const handleTypeChange=(e,v)=>{
+      dispatch(fetchRestaurant({type:e, token }))
+      dispatch(fetchBranch({type:e, token }))
+        console.log(e,v)
+    }
     
     return (
         <>
@@ -406,8 +409,8 @@ const RestaurantPage = () => {
                             <h4 className="ml-5 colorblack bold">Restaurant Management</h4>
                             <div className="mt-4 text-center">
                                 <div class="btn-group" style={{ minWidth: '50%' }}>
-                                    <button type="button" class="btn active border" id="restMap" onClick={openMap}>Map View</button>
-                                    <button type="button" class="btn border" onClick={openList} id="restList">List View</button>
+                                    <button type="button" class="btn active border rounded-0" id="restMap" onClick={openMap}>Map View</button>
+                                    <button type="button" class="btn border rounded-0" onClick={openList} id="restList">List View</button>
 
                                 </div>
                                 {/* <div className="col-md-12 col-lg-12 col-sm-12" style={{ float: 'right' }}> */}
@@ -426,9 +429,10 @@ const RestaurantPage = () => {
 
             <div className="container-fluid">
                 <div className="row">
-                    {/* {
-                        restaurantMap && (<SimpleMap />)
-                    } */}
+                    {
+                        // restaurantMap && (<SimpleMap />)
+                        restaurantMap && (<UserMap />)
+                    }
 
                     {/* {
                         restaurant && ( */}
@@ -507,7 +511,7 @@ const RestaurantPage = () => {
                                             width: '100%',
                                         }}
                                         options={restroTypeList}
-                                        // onChange={dataType}
+                                        onChange={handleTypeChange}
                                     />
                                     {/* </select> */}
                                 </div>

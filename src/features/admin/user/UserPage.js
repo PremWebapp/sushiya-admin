@@ -200,8 +200,8 @@ function UserPage() {
                             <h3 className="ml-5 colorblack bold">User Management</h3>
                             <div className="mt-4 text-center">
                                 <div class="btn-group" style={{ minWidth: '50%' }}>
-                                    <button type="button" class="btn border active" id="restMap" onClick={openMap}>Map View</button>
-                                    <button type="button" class="btn border" onClick={openList} id="restList">List View</button>
+                                    <button type="button" class="btn border active rounded-0" id="restMap" onClick={openMap}>Map View</button>
+                                    <button type="button" class="btn border rounded-0" onClick={openList} id="restList">List View</button>
 
                                 </div>
                             </div>

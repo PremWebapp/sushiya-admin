@@ -15,15 +15,15 @@ const initialState = {
 // this function will be triggered when called login
 export const fetchRestaurant = createAsyncThunk(
     'fetch/restaurant',
-    async ({token}) => {
-        const returnData = await getItems(`${baseUrl.production}/restaurant`, token)
+    async ({type,token}) => {
+        const returnData = await getItems(`${baseUrl.production}/restaurant?type=${type}`, token)
         return returnData
     }
 )
 export const fetchBranch = createAsyncThunk(
     'fetch/branch',
-    async ({token}) => {
-        const returnData = await getItems(`${baseUrl.production}/BranchStatus`, token)
+    async ({type,token}) => {
+        const returnData = await getItems(`${baseUrl.production}/BranchStatus?type=${type}`, token)
         return returnData
     }
 )

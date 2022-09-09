@@ -310,8 +310,8 @@ function CountryCityPage() {
                             <h4 className="ml-5 colorblack bold">Country & City Management</h4>
                             <div className="mt-4 text-center">
                                 <div class="btn-group" style={{ minWidth: '50%' }}>
-                                    <button type="button" class="btn active border" id="country" onClick={openCountry}>Country</button>
-                                    <button type="button" class="btn border" onClick={openCity} id="city">City</button>
+                                    <button type="button" class="btn active border rounded-0" id="country" onClick={openCountry}>Country</button>
+                                    <button type="button" class="btn border rounded-0" onClick={openCity} id="city">City</button>
 
                                 </div>
                                 &nbsp;&nbsp;

@@ -358,7 +358,7 @@ function SideNav() {
             key="16"
             icon={<BsPersonCircle size={20} />}
           >
-            <NavLink to="/admin/bankdetail">Sub Admin</NavLink>
+            <NavLink to="/admin/subadmin">Sub Admin</NavLink>
           </Menu.Item>
           <Menu.Item
             className={styles.paddingLeft}
