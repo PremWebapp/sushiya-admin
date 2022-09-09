@@ -1,6 +1,7 @@
 import React, { useState, useEffect,useCallback, memo } from 'react';
 import { GoogleMap,Circle ,Marker , useJsApiLoader  } from '@react-google-maps/api';
 import restroIcon from '../../../img/restroIcon.png'
+import riderlogo from '../../../img/riderlogo.png'
 
 const UserMap=()=> {
     const [map, setMap] = useState(null)
@@ -19,6 +20,28 @@ const UserMap=()=> {
         {
             lat: 25.3176,
             lng: 82.9739
+        },
+    ]
+    const markerRider=[
+        {
+            lat:15.2993,
+            lng:74.1240
+        },
+        {
+            lat: 13.0827,
+            lng: 80.2707
+        },
+        {
+            lat: 28.7041,
+            lng: 77.1025
+        },
+        {
+            lat: 21.2514,
+            lng: 81.6296
+        },
+        {
+            lat: 27.0238,
+            lng: 74.2179
         },
     ]
 
@@ -89,6 +112,12 @@ const UserMap=()=> {
              {marker.map((mark, index) => (
                 <Marker position={mark} icon={restroIcon}  />
                 ))}
+
+             {markerRider.map((mark, index) => (
+                <Marker position={mark} icon={riderlogo}  />
+                ))}
+
+
                 { /* Child components, such as markers, info windows, etc. */}
                 <></>
             </GoogleMap>
