@@ -36,7 +36,7 @@ export const Login = () => {
 
   // this function will be triggered when founded token changes
   useEffect(() => {
-    if (token && user.type === "admin") navigate("/Admin");
+    if (token && user.type === "admin") navigate("/admin");
   }, [token])
 
   // socket.on('connect', function (con) {
